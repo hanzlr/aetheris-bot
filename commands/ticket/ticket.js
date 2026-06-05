@@ -5,7 +5,8 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-  EmbedBuilder
+  EmbedBuilder,
+  MessageFlags
 } from 'discord.js'
 import supabase from '../../database/supabase.js'
 
@@ -36,7 +37,7 @@ export async function handleTicket(interaction) {
   if (!interaction.isButton()) return
   if (interaction.customId !== 'open_ticket') return
 
-  await interaction.deferReply({ ephemeral: true })
+  await interaction.deferReply({ flags: MessageFlags.Ephemeral })
 
   const guild = interaction.guild
   const user = interaction.user
@@ -111,6 +112,7 @@ export async function handleCloseTicket(interaction) {
 
   await interaction.reply({
     content: '🔒 Ticket akan ditutup dalam 5 detik...',
+    flags: MessageFlags.Ephemeral
   })
 
   // Update status di Supabase
