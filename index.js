@@ -43,6 +43,7 @@ import {
   handleCoinflip,
   handleSlot,
   handleBlackjack,
+  handleBlackjackButton,
 } from "./commands/games/games.js";
 
 const client = new Client({
@@ -75,7 +76,7 @@ client.once("clientReady", async () => {
   try {
     await rest.put(
       Routes.applicationGuildCommands(client.user.id, process.env.GUILD_ID),
-      { body: commands }
+      { body: commands },
     );
     console.log("✅ Slash commands berhasil didaftarkan!");
   } catch (error) {
@@ -83,11 +84,11 @@ client.once("clientReady", async () => {
   }
 
   setInterval(async () => {
-    const now = new Date()
+    const now = new Date();
     if (now.getDay() === 1 && now.getHours() === 8 && now.getMinutes() === 0) {
-      await giveWeeklyInterest(client)
+      await giveWeeklyInterest(client);
     }
-  }, 60 * 1000)
+  }, 60 * 1000);
 });
 
 client.on("messageCreate", async (message) => {
@@ -105,23 +106,36 @@ client.on("interactionCreate", async (interaction) => {
         await sendTicketPanel(interaction.channel);
       }
       if (interaction.commandName === "rank") await handleRank(interaction);
-      if (interaction.commandName === "leaderboard") await handleLeaderboard(interaction);
+      if (interaction.commandName === "leaderboard")
+        await handleLeaderboard(interaction);
       if (interaction.commandName === "daily") await handleDaily(interaction);
-      if (interaction.commandName === "balance") await handleBalance(interaction);
-      if (interaction.commandName === "deposit") await handleDeposit(interaction);
-      if (interaction.commandName === "withdraw") await handleWithdraw(interaction);
+      if (interaction.commandName === "balance")
+        await handleBalance(interaction);
+      if (interaction.commandName === "deposit")
+        await handleDeposit(interaction);
+      if (interaction.commandName === "withdraw")
+        await handleWithdraw(interaction);
       if (interaction.commandName === "dice") await handleDice(interaction);
-      if (interaction.commandName === "coinflip") await handleCoinflip(interaction);
+      if (interaction.commandName === "coinflip")
+        await handleCoinflip(interaction);
       if (interaction.commandName === "slot") await handleSlot(interaction);
-      if (interaction.commandName === "blackjack") await handleBlackjack(interaction);
+      if (interaction.commandName === "blackjack")
+        await handleBlackjack(interaction);
     }
 
     if (interaction.isButton()) {
-      if (interaction.customId === "open_ticket") await handleTicket(interaction);
-      if (interaction.customId === "close_ticket") await handleCloseTicket(interaction);
+      if (interaction.customId === "open_ticket")
+        await handleTicket(interaction);
+      if (interaction.customId === "close_ticket")
+        await handleCloseTicket(interaction);
+      if (
+        interaction.customId === "bj_hit" ||
+        interaction.customId === "bj_stand"
+      )
+        await handleBlackjackButton(interaction);
     }
   } catch (error) {
-    console.error('Interaction error:', error)
+    console.error("Interaction error:", error);
   }
 });
 
