@@ -27,6 +27,13 @@ import {
   handleDaily,
   handleBalance,
 } from "./commands/currency/currency.js";
+import {
+  depositData,
+  withdrawData,
+  handleDeposit,
+  handleWithdraw,
+  giveWeeklyInterest,
+} from "./commands/bank/bank.js";
 
 const client = new Client({
   intents: [
@@ -45,6 +52,8 @@ const commands = [
   leaderboardData.toJSON(),
   dailyData.toJSON(),
   balanceData.toJSON(),
+  depositData.toJSON(),
+  withdrawData.toJSON(),
 ];
 
 client.once("clientReady", async () => {
@@ -58,6 +67,14 @@ client.once("clientReady", async () => {
   } catch (error) {
     console.error(error);
   }
+
+  // Cek bunga mingguan setiap jam
+  setInterval(async () => {
+    const now = new Date()
+    if (now.getDay() === 1 && now.getHours() === 8 && now.getMinutes() === 0) {
+      await giveWeeklyInterest(client)
+    }
+  }, 60 * 1000)
 });
 
 client.on("messageCreate", async (message) => {
@@ -78,6 +95,8 @@ client.on("interactionCreate", async (interaction) => {
       if (interaction.commandName === "leaderboard") await handleLeaderboard(interaction);
       if (interaction.commandName === "daily") await handleDaily(interaction);
       if (interaction.commandName === "balance") await handleBalance(interaction);
+      if (interaction.commandName === "deposit") await handleDeposit(interaction);
+      if (interaction.commandName === "withdraw") await handleWithdraw(interaction);
     }
 
     if (interaction.isButton()) {
