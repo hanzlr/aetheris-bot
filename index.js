@@ -34,6 +34,16 @@ import {
   handleWithdraw,
   giveWeeklyInterest,
 } from "./commands/bank/bank.js";
+import {
+  diceData,
+  coinflipData,
+  slotData,
+  blackjackData,
+  handleDice,
+  handleCoinflip,
+  handleSlot,
+  handleBlackjack,
+} from "./commands/games/games.js";
 
 const client = new Client({
   intents: [
@@ -54,6 +64,10 @@ const commands = [
   balanceData.toJSON(),
   depositData.toJSON(),
   withdrawData.toJSON(),
+  diceData.toJSON(),
+  coinflipData.toJSON(),
+  slotData.toJSON(),
+  blackjackData.toJSON(),
 ];
 
 client.once("clientReady", async () => {
@@ -68,7 +82,6 @@ client.once("clientReady", async () => {
     console.error(error);
   }
 
-  // Cek bunga mingguan setiap jam
   setInterval(async () => {
     const now = new Date()
     if (now.getDay() === 1 && now.getHours() === 8 && now.getMinutes() === 0) {
@@ -97,6 +110,10 @@ client.on("interactionCreate", async (interaction) => {
       if (interaction.commandName === "balance") await handleBalance(interaction);
       if (interaction.commandName === "deposit") await handleDeposit(interaction);
       if (interaction.commandName === "withdraw") await handleWithdraw(interaction);
+      if (interaction.commandName === "dice") await handleDice(interaction);
+      if (interaction.commandName === "coinflip") await handleCoinflip(interaction);
+      if (interaction.commandName === "slot") await handleSlot(interaction);
+      if (interaction.commandName === "blackjack") await handleBlackjack(interaction);
     }
 
     if (interaction.isButton()) {
