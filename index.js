@@ -15,34 +15,22 @@ import {
   handleCloseTicket,
 } from "./commands/ticket/ticket.js";
 import {
-  rankData,
-  leaderboardData,
+  levelData,
   handleXP,
-  handleRank,
-  handleLeaderboard,
+  handleLevel,
 } from "./commands/leveling/leveling.js";
 import {
-  dailyData,
-  balanceData,
-  handleDaily,
-  handleBalance,
+  economyData,
+  handleEconomy,
 } from "./commands/currency/currency.js";
 import {
-  depositData,
-  withdrawData,
-  handleDeposit,
-  handleWithdraw,
+  bankData,
+  handleBank,
   giveWeeklyInterest,
 } from "./commands/bank/bank.js";
 import {
-  diceData,
-  coinflipData,
-  slotData,
-  blackjackData,
-  handleDice,
-  handleCoinflip,
-  handleSlot,
-  handleBlackjack,
+  gameData,
+  handleGame,
   handleBlackjackButton,
 } from "./commands/games/games.js";
 
@@ -59,16 +47,10 @@ const rest = new REST().setToken(process.env.DISCORD_TOKEN);
 
 const commands = [
   ticketData.toJSON(),
-  rankData.toJSON(),
-  leaderboardData.toJSON(),
-  dailyData.toJSON(),
-  balanceData.toJSON(),
-  depositData.toJSON(),
-  withdrawData.toJSON(),
-  diceData.toJSON(),
-  coinflipData.toJSON(),
-  slotData.toJSON(),
-  blackjackData.toJSON(),
+  levelData.toJSON(),
+  economyData.toJSON(),
+  bankData.toJSON(),
+  gameData.toJSON(),
 ];
 
 client.once("clientReady", async () => {
@@ -76,7 +58,7 @@ client.once("clientReady", async () => {
   try {
     await rest.put(
       Routes.applicationGuildCommands(client.user.id, process.env.GUILD_ID),
-      { body: commands },
+      { body: commands }
     );
     console.log("✅ Slash commands berhasil didaftarkan!");
   } catch (error) {
@@ -105,34 +87,16 @@ client.on("interactionCreate", async (interaction) => {
         });
         await sendTicketPanel(interaction.channel);
       }
-      if (interaction.commandName === "rank") await handleRank(interaction);
-      if (interaction.commandName === "leaderboard")
-        await handleLeaderboard(interaction);
-      if (interaction.commandName === "daily") await handleDaily(interaction);
-      if (interaction.commandName === "balance")
-        await handleBalance(interaction);
-      if (interaction.commandName === "deposit")
-        await handleDeposit(interaction);
-      if (interaction.commandName === "withdraw")
-        await handleWithdraw(interaction);
-      if (interaction.commandName === "dice") await handleDice(interaction);
-      if (interaction.commandName === "coinflip")
-        await handleCoinflip(interaction);
-      if (interaction.commandName === "slot") await handleSlot(interaction);
-      if (interaction.commandName === "blackjack")
-        await handleBlackjack(interaction);
+      if (interaction.commandName === "level") await handleLevel(interaction);
+      if (interaction.commandName === "economy") await handleEconomy(interaction);
+      if (interaction.commandName === "bank") await handleBank(interaction);
+      if (interaction.commandName === "game") await handleGame(interaction);
     }
 
     if (interaction.isButton()) {
-      if (interaction.customId === "open_ticket")
-        await handleTicket(interaction);
-      if (interaction.customId === "close_ticket")
-        await handleCloseTicket(interaction);
-      if (
-        interaction.customId === "bj_hit" ||
-        interaction.customId === "bj_stand"
-      )
-        await handleBlackjackButton(interaction);
+      if (interaction.customId === "open_ticket") await handleTicket(interaction);
+      if (interaction.customId === "close_ticket") await handleCloseTicket(interaction);
+      if (interaction.customId === "bj_hit" || interaction.customId === "bj_stand") await handleBlackjackButton(interaction);
     }
   } catch (error) {
     console.error("Interaction error:", error);

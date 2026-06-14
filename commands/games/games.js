@@ -1,7 +1,6 @@
 import { EmbedBuilder, SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
 import supabase from '../../database/supabase.js'
 
-// Simpan state blackjack yang sedang berlangsung
 const activeGames = new Map()
 
 // ===== HELPER =====
@@ -30,17 +29,67 @@ const cardValue = (card) => {
 const randomCard = () => cards[Math.floor(Math.random() * cards.length)]
 const totalCards = (cards) => cards.reduce((sum, c) => sum + cardValue(c), 0)
 
-// ===== DICE ROLL =====
-export const diceData = new SlashCommandBuilder()
-  .setName('dice')
-  .setDescription('Adu dadu lawan bot!')
-  .addIntegerOption(option =>
-    option.setName('taruhan')
-      .setDescription('Jumlah koin yang mau ditaruhkan')
-      .setRequired(true)
+// ===== SUBCOMMAND /game =====
+export const gameData = new SlashCommandBuilder()
+  .setName('game')
+  .setDescription('Mini games!')
+  .addSubcommand(sub =>
+    sub.setName('dice')
+      .setDescription('Adu dadu lawan bot!')
+      .addIntegerOption(option =>
+        option.setName('taruhan')
+          .setDescription('Jumlah koin yang mau ditaruhkan')
+          .setRequired(true)
+      )
+  )
+  .addSubcommand(sub =>
+    sub.setName('coinflip')
+      .setDescription('Tebak koin — heads atau tails!')
+      .addStringOption(option =>
+        option.setName('pilihan')
+          .setDescription('Pilih heads atau tails')
+          .setRequired(true)
+          .addChoices(
+            { name: 'Heads', value: 'heads' },
+            { name: 'Tails', value: 'tails' }
+          )
+      )
+      .addIntegerOption(option =>
+        option.setName('taruhan')
+          .setDescription('Jumlah koin yang mau ditaruhkan')
+          .setRequired(true)
+      )
+  )
+  .addSubcommand(sub =>
+    sub.setName('slot')
+      .setDescription('Spin slot machine!')
+      .addIntegerOption(option =>
+        option.setName('taruhan')
+          .setDescription('Jumlah koin yang mau ditaruhkan')
+          .setRequired(true)
+      )
+  )
+  .addSubcommand(sub =>
+    sub.setName('blackjack')
+      .setDescription('Main blackjack lawan bot!')
+      .addIntegerOption(option =>
+        option.setName('taruhan')
+          .setDescription('Jumlah koin yang mau ditaruhkan')
+          .setRequired(true)
+      )
   )
 
-export async function handleDice(interaction) {
+export async function handleGame(interaction) {
+  const sub = interaction.options.getSubcommand()
+
+  if (sub === 'dice') await handleDice(interaction)
+  if (sub === 'coinflip') await handleCoinflip(interaction)
+  if (sub === 'slot') await handleSlot(interaction)
+  if (sub === 'blackjack') await handleBlackjack(interaction)
+}
+
+// ===== DICE =====
+async function handleDice(interaction) {
   const user = interaction.user
   const taruhan = interaction.options.getInteger('taruhan')
 
@@ -85,25 +134,7 @@ export async function handleDice(interaction) {
 }
 
 // ===== COINFLIP =====
-export const coinflipData = new SlashCommandBuilder()
-  .setName('coinflip')
-  .setDescription('Tebak koin — heads atau tails!')
-  .addStringOption(option =>
-    option.setName('pilihan')
-      .setDescription('Pilih heads atau tails')
-      .setRequired(true)
-      .addChoices(
-        { name: 'Heads', value: 'heads' },
-        { name: 'Tails', value: 'tails' }
-      )
-  )
-  .addIntegerOption(option =>
-    option.setName('taruhan')
-      .setDescription('Jumlah koin yang mau ditaruhkan')
-      .setRequired(true)
-  )
-
-export async function handleCoinflip(interaction) {
+async function handleCoinflip(interaction) {
   const user = interaction.user
   const pilihan = interaction.options.getString('pilihan')
   const taruhan = interaction.options.getInteger('taruhan')
@@ -116,7 +147,6 @@ export async function handleCoinflip(interaction) {
 
   const hasil = Math.random() < 0.5 ? 'heads' : 'tails'
   const menang = pilihan === hasil
-
   const newCoins = menang ? (data.coins || 0) + taruhan : (data.coins || 0) - taruhan
   await updateCoins(user.id, newCoins)
 
@@ -134,17 +164,8 @@ export async function handleCoinflip(interaction) {
   interaction.reply({ embeds: [embed] })
 }
 
-// ===== SLOT MACHINE =====
-export const slotData = new SlashCommandBuilder()
-  .setName('slot')
-  .setDescription('Spin slot machine!')
-  .addIntegerOption(option =>
-    option.setName('taruhan')
-      .setDescription('Jumlah koin yang mau ditaruhkan')
-      .setRequired(true)
-  )
-
-export async function handleSlot(interaction) {
+// ===== SLOT =====
+async function handleSlot(interaction) {
   const user = interaction.user
   const taruhan = interaction.options.getInteger('taruhan')
 
@@ -196,15 +217,6 @@ export async function handleSlot(interaction) {
 }
 
 // ===== BLACKJACK =====
-export const blackjackData = new SlashCommandBuilder()
-  .setName('blackjack')
-  .setDescription('Main blackjack lawan bot!')
-  .addIntegerOption(option =>
-    option.setName('taruhan')
-      .setDescription('Jumlah koin yang mau ditaruhkan')
-      .setRequired(true)
-  )
-
 function buildBlackjackEmbed(playerCards, botCards, playerTotal, status) {
   const embed = new EmbedBuilder()
     .setTitle('🃏 Blackjack!')
@@ -221,7 +233,7 @@ function buildBlackjackEmbed(playerCards, botCards, playerTotal, status) {
   return embed
 }
 
-export async function handleBlackjack(interaction) {
+async function handleBlackjack(interaction) {
   const user = interaction.user
   const taruhan = interaction.options.getInteger('taruhan')
 
@@ -231,7 +243,6 @@ export async function handleBlackjack(interaction) {
   if (!data) return interaction.reply({ content: '❌ Kamu belum punya akun!', flags: 64 })
   if ((data.coins || 0) < taruhan) return interaction.reply({ content: `❌ Koin tidak cukup! Kamu punya **${data.coins || 0} koin**.`, flags: 64 })
 
-  // Cek apakah sudah ada game aktif
   if (activeGames.has(user.id)) {
     return interaction.reply({ content: '❌ Kamu masih punya game blackjack yang belum selesai!', flags: 64 })
   }
@@ -240,23 +251,15 @@ export async function handleBlackjack(interaction) {
   const botCards = [randomCard(), randomCard()]
   const playerTotal = totalCards(playerCards)
 
-  // Simpan state game
   activeGames.set(user.id, { playerCards, botCards, taruhan, coins: data.coins || 0 })
 
   const embed = buildBlackjackEmbed(playerCards, botCards, playerTotal, 'playing')
 
   const row = new ActionRowBuilder().addComponents(
-    new ButtonBuilder()
-      .setCustomId('bj_hit')
-      .setLabel('🃏 Hit')
-      .setStyle(ButtonStyle.Primary),
-    new ButtonBuilder()
-      .setCustomId('bj_stand')
-      .setLabel('✋ Stand')
-      .setStyle(ButtonStyle.Secondary),
+    new ButtonBuilder().setCustomId('bj_hit').setLabel('🃏 Hit').setStyle(ButtonStyle.Primary),
+    new ButtonBuilder().setCustomId('bj_stand').setLabel('✋ Stand').setStyle(ButtonStyle.Secondary),
   )
 
-  // Kalau langsung blackjack
   if (playerTotal === 21) {
     activeGames.delete(user.id)
     const newCoins = (data.coins || 0) + taruhan
@@ -270,24 +273,19 @@ export async function handleBlackjack(interaction) {
   await interaction.reply({ embeds: [embed], components: [row] })
 }
 
-// Handle tombol Hit & Stand
 export async function handleBlackjackButton(interaction) {
   const user = interaction.user
   const game = activeGames.get(user.id)
 
-  if (!game) {
-    return interaction.reply({ content: '❌ Tidak ada game blackjack aktif!', flags: 64 })
-  }
+  if (!game) return interaction.reply({ content: '❌ Tidak ada game blackjack aktif!', flags: 64 })
 
   let { playerCards, botCards, taruhan, coins } = game
 
   if (interaction.customId === 'bj_hit') {
-    // Ambil kartu baru
     playerCards.push(randomCard())
     const playerTotal = totalCards(playerCards)
 
     if (playerTotal > 21) {
-      // Bust!
       activeGames.delete(user.id)
       const newCoins = coins - taruhan
       await updateCoins(user.id, newCoins)
@@ -301,15 +299,9 @@ export async function handleBlackjackButton(interaction) {
       return interaction.update({ embeds: [embed], components: [] })
     }
 
-    if (playerTotal === 21) {
-      // Otomatis stand kalau 21
-      return await resolveStand(interaction, game, playerCards)
-    }
+    if (playerTotal === 21) return await resolveStand(interaction, game, playerCards)
 
-    // Update embed dengan kartu baru
     const embed = buildBlackjackEmbed(playerCards, botCards, playerTotal, 'playing')
-    embed.setDescription('Pilih aksi kamu:')
-
     const row = new ActionRowBuilder().addComponents(
       new ButtonBuilder().setCustomId('bj_hit').setLabel('🃏 Hit').setStyle(ButtonStyle.Primary),
       new ButtonBuilder().setCustomId('bj_stand').setLabel('✋ Stand').setStyle(ButtonStyle.Secondary),
@@ -328,7 +320,6 @@ async function resolveStand(interaction, game, playerCards) {
   const { botCards, taruhan, coins } = game
   const user = interaction.user
 
-  // Bot terus ambil kartu sampai 17+
   while (totalCards(botCards) < 17) {
     botCards.push(randomCard())
   }
