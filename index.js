@@ -33,6 +33,11 @@ import {
   handleGame,
   handleBlackjackButton,
 } from "./commands/games/games.js";
+import {
+  profileData,
+  handleProfile,
+  checkBadges,
+} from "./commands/profile/profile.js";
 
 const client = new Client({
   intents: [
@@ -51,6 +56,7 @@ const commands = [
   economyData.toJSON(),
   bankData.toJSON(),
   gameData.toJSON(),
+  profileData.toJSON(),
 ];
 
 client.once("clientReady", async () => {
@@ -91,6 +97,7 @@ client.on("interactionCreate", async (interaction) => {
       if (interaction.commandName === "economy") await handleEconomy(interaction);
       if (interaction.commandName === "bank") await handleBank(interaction);
       if (interaction.commandName === "game") await handleGame(interaction);
+      if (interaction.commandName === "profile") await handleProfile(interaction);
     }
 
     if (interaction.isButton()) {
