@@ -50,6 +50,11 @@ import {
   handleInventory,
 } from "./commands/inventory/inventory.js";
 
+import {
+  fishingData,
+  handleFishing,
+} from "./commands/fishing/fishing.js";
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -71,6 +76,7 @@ const commands = [
   statsData.toJSON(),
   lootboxData.toJSON(),
   inventoryData.toJSON(),
+  fishingData.toJSON(),
 ];
 
 client.once("clientReady", async () => {
@@ -115,6 +121,7 @@ client.on("interactionCreate", async (interaction) => {
       if (interaction.commandName === "stats") await handleStats(interaction);
       if (interaction.commandName === "lootbox") await handleLootbox(interaction);
       if (interaction.commandName === "inventory") await handleInventory(interaction);
+      if (interaction.commandName === "fish") await handleFishing(interaction);
     }
 
     if (interaction.isButton()) {

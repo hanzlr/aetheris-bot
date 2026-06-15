@@ -1,5 +1,6 @@
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js'
 import supabase from '../../database/supabase.js'
+import { FISH_LIST } from '../fishing/fishing.js'
 
 export const inventoryData = new SlashCommandBuilder()
   .setName('inventory')
@@ -33,6 +34,20 @@ export async function handleInventory(interaction) {
   const rare = boxes?.filter(b => b.box_type === 'rare').length || 0
   const legendary = boxes?.filter(b => b.box_type === 'legendary').length || 0
 
+  // Ambil ikan
+  const { data: fishItems } = await supabase
+    .from('fish_inventory')
+    .select('*')
+    .eq('user_id', target.id)
+    .order('fish_id')
+
+  const fishText = fishItems && fishItems.length > 0
+    ? fishItems.map(f => {
+        const fish = FISH_LIST[f.fish_id]
+        return `${fish.rarityEmoji} ${fish.emoji} ${fish.name}: ${f.quantity}x`
+      }).join('\n')
+    : 'Belum ada ikan'
+
   // Ambil badges
   const { data: badges } = await supabase
     .from('badges')
@@ -47,7 +62,6 @@ export async function handleInventory(interaction) {
     .setTitle(`🎒 Inventory ${target.username}`)
     .setThumbnail(target.displayAvatarURL())
     .addFields(
-      // Ekonomi
       {
         name: '💰 Ekonomi',
         value: [
@@ -56,7 +70,6 @@ export async function handleInventory(interaction) {
         ].join('\n'),
         inline: false
       },
-      // Loot Box
       {
         name: '🎁 Loot Box',
         value: [
@@ -66,7 +79,11 @@ export async function handleInventory(interaction) {
         ].join('\n'),
         inline: false
       },
-      // Badges
+      {
+        name: '🐟 Ikan',
+        value: fishText,
+        inline: false
+      },
       {
         name: '🏅 Badges',
         value: badgeList,
