@@ -20,6 +20,17 @@ async function updateCoins(userId, newCoins) {
     .eq('user_id', userId)
 }
 
+async function saveGameStat(userId, gameType, result, coinsChange) {
+  await supabase
+    .from('game_stats')
+    .insert({
+      user_id: userId,
+      game_type: gameType,
+      result,
+      coins_change: coinsChange
+    })
+}
+
 const cards = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
 const cardValue = (card) => {
   if (['J', 'Q', 'K'].includes(card)) return 10
@@ -81,7 +92,6 @@ export const gameData = new SlashCommandBuilder()
 
 export async function handleGame(interaction) {
   const sub = interaction.options.getSubcommand()
-
   if (sub === 'dice') await handleDice(interaction)
   if (sub === 'coinflip') await handleCoinflip(interaction)
   if (sub === 'slot') await handleSlot(interaction)
@@ -102,22 +112,26 @@ async function handleDice(interaction) {
   const playerDice = Math.floor(Math.random() * 6) + 1
   const botDice = Math.floor(Math.random() * 6) + 1
 
-  let result, newCoins, color
+  let result, newCoins, color, gameResult
   if (playerDice > botDice) {
     result = `🎉 Kamu menang! +${taruhan} koin`
     newCoins = (data.coins || 0) + taruhan
     color = 0x57F287
+    gameResult = 'win'
   } else if (playerDice < botDice) {
     result = `😢 Kamu kalah! -${taruhan} koin`
     newCoins = (data.coins || 0) - taruhan
     color = 0xED4245
+    gameResult = 'loss'
   } else {
     result = `🤝 Seri! Koin kembali.`
     newCoins = data.coins || 0
     color = 0xFFD700
+    gameResult = 'draw'
   }
 
   await updateCoins(user.id, newCoins)
+  await saveGameStat(user.id, 'dice', gameResult, newCoins - (data.coins || 0))
 
   const embed = new EmbedBuilder()
     .setTitle('🎲 Dice Roll!')
@@ -148,7 +162,9 @@ async function handleCoinflip(interaction) {
   const hasil = Math.random() < 0.5 ? 'heads' : 'tails'
   const menang = pilihan === hasil
   const newCoins = menang ? (data.coins || 0) + taruhan : (data.coins || 0) - taruhan
+
   await updateCoins(user.id, newCoins)
+  await saveGameStat(user.id, 'coinflip', menang ? 'win' : 'loss', newCoins - (data.coins || 0))
 
   const embed = new EmbedBuilder()
     .setTitle('🪙 Coinflip!')
@@ -180,28 +196,33 @@ async function handleSlot(interaction) {
   const s2 = symbols[Math.floor(Math.random() * symbols.length)]
   const s3 = symbols[Math.floor(Math.random() * symbols.length)]
 
-  let newCoins, result, color
+  let newCoins, result, color, gameResult
   if (s1 === s2 && s2 === s3) {
     if (s1 === '💎') {
       newCoins = (data.coins || 0) + taruhan * 10
       result = `💎 JACKPOT! +${taruhan * 10} koin!`
       color = 0xFFD700
+      gameResult = 'win'
     } else {
       newCoins = (data.coins || 0) + taruhan * 3
       result = `🎉 Tiga sama! +${taruhan * 3} koin!`
       color = 0x57F287
+      gameResult = 'win'
     }
   } else if (s1 === s2 || s2 === s3 || s1 === s3) {
     newCoins = (data.coins || 0) + taruhan
     result = `✨ Dua sama! +${taruhan} koin!`
     color = 0x5865F2
+    gameResult = 'win'
   } else {
     newCoins = (data.coins || 0) - taruhan
     result = `😢 Tidak ada yang sama! -${taruhan} koin`
     color = 0xED4245
+    gameResult = 'loss'
   }
 
   await updateCoins(user.id, newCoins)
+  await saveGameStat(user.id, 'slot', gameResult, newCoins - (data.coins || 0))
 
   const embed = new EmbedBuilder()
     .setTitle('🎰 Slot Machine!')
@@ -264,6 +285,7 @@ async function handleBlackjack(interaction) {
     activeGames.delete(user.id)
     const newCoins = (data.coins || 0) + taruhan
     await updateCoins(user.id, newCoins)
+    await saveGameStat(user.id, 'blackjack', 'win', taruhan)
     embed.setDescription('🎉 BLACKJACK! Kamu menang!')
     embed.addFields({ name: '💳 Koin Sekarang', value: `${newCoins} koin` })
     embed.setColor(0xFFD700)
@@ -289,6 +311,7 @@ export async function handleBlackjackButton(interaction) {
       activeGames.delete(user.id)
       const newCoins = coins - taruhan
       await updateCoins(user.id, newCoins)
+      await saveGameStat(user.id, 'blackjack', 'loss', -taruhan)
 
       const embed = buildBlackjackEmbed(playerCards, botCards, playerTotal, 'end')
       embed.addFields(
@@ -327,23 +350,27 @@ async function resolveStand(interaction, game, playerCards) {
   const playerTotal = totalCards(playerCards)
   const botTotal = totalCards(botCards)
 
-  let result, newCoins, color
+  let result, newCoins, color, gameResult
   if (botTotal > 21 || playerTotal > botTotal) {
     result = `🎉 Kamu menang! +${taruhan} koin`
     newCoins = coins + taruhan
     color = 0x57F287
+    gameResult = 'win'
   } else if (playerTotal < botTotal) {
     result = `😢 Kamu kalah! -${taruhan} koin`
     newCoins = coins - taruhan
     color = 0xED4245
+    gameResult = 'loss'
   } else {
     result = `🤝 Seri! Koin kembali.`
     newCoins = coins
     color = 0xFFD700
+    gameResult = 'draw'
   }
 
   activeGames.delete(user.id)
   await updateCoins(user.id, newCoins)
+  await saveGameStat(user.id, 'blackjack', gameResult, newCoins - coins)
 
   const embed = buildBlackjackEmbed(playerCards, botCards, playerTotal, 'end')
   embed.addFields(
