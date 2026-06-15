@@ -41,6 +41,10 @@ import {
   statsData,
   handleStats,
 } from "./commands/stats/stats.js";
+import {
+  lootboxData,
+  handleLootbox,
+} from "./commands/lootbox/lootbox.js";
 
 const client = new Client({
   intents: [
@@ -61,6 +65,7 @@ const commands = [
   gameData.toJSON(),
   profileData.toJSON(),
   statsData.toJSON(),
+  lootboxData.toJSON(),
 ];
 
 client.once("clientReady", async () => {
@@ -103,6 +108,7 @@ client.on("interactionCreate", async (interaction) => {
       if (interaction.commandName === "game") await handleGame(interaction);
       if (interaction.commandName === "profile") await handleProfile(interaction);
       if (interaction.commandName === "stats") await handleStats(interaction);
+      if (interaction.commandName === "lootbox") await handleLootbox(interaction);
     }
 
     if (interaction.isButton()) {
