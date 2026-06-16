@@ -1,5 +1,6 @@
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js'
 import supabase from '../../database/supabase.js'
+import { PANCING_LIST, UMPAN_LIST } from '../equip/equip.js'
 
 // Daftar semua ikan
 export const FISH_LIST = {
@@ -30,17 +31,48 @@ export const FISH_LIST = {
 // Cooldown fishing (30 detik)
 const fishingCooldown = new Map()
 
-// Random ikan berdasarkan rarity
-function getRandomFish() {
+// ============================================================
+// RANDOM IKAN BERDASARKAN RARITY + BONUS EQUIP
+// Base chance: common 50%, uncommon 30%, rare 15%, epic 4%, legendary 1%
+// Bonus dari pancing & umpan mengurangi chance common
+// ============================================================
+function getRandomFish(pancingId = 'pancing_bambu', umpanId = 'cacing') {
+  const pancing = PANCING_LIST[pancingId] || PANCING_LIST['pancing_bambu']
+  const umpan = UMPAN_LIST[umpanId] || UMPAN_LIST['cacing']
+
+  // Hitung total bonus per rarity
+  const bonus = {
+    uncommon: (pancing.bonus.uncommon || 0) + (umpan.bonus.uncommon || 0),
+    rare: (pancing.bonus.rare || 0) + (umpan.bonus.rare || 0),
+    epic: (pancing.bonus.epic || 0) + (umpan.bonus.epic || 0),
+    legendary: (pancing.bonus.legendary || 0) + (umpan.bonus.legendary || 0),
+  }
+
+  // Base chance
+  let chances = {
+    common: 50,
+    uncommon: 30 + bonus.uncommon,
+    rare: 15 + bonus.rare,
+    epic: 4 + bonus.epic,
+    legendary: 1 + bonus.legendary,
+  }
+
+  // Kurangi common supaya total tetap 100
+  const totalBonus = bonus.uncommon + bonus.rare + bonus.epic + bonus.legendary
+  chances.common = Math.max(0, 50 - totalBonus)
+
+  // Roll
   const roll = Math.random() * 100
+  let cumulative = 0
 
-  let pool
-  if (roll < 50) pool = ['lele', 'mujair', 'nila']
-  else if (roll < 80) pool = ['kakap', 'kerapu', 'bandeng']
-  else if (roll < 95) pool = ['hiu', 'pari', 'tuna']
-  else if (roll < 99) pool = ['coelacanth', 'arapaima']
-  else pool = ['naga_laut', 'kraken']
+  if (roll < (cumulative += chances.common)) return getFromPool(['lele', 'mujair', 'nila'])
+  if (roll < (cumulative += chances.uncommon)) return getFromPool(['kakap', 'kerapu', 'bandeng'])
+  if (roll < (cumulative += chances.rare)) return getFromPool(['hiu', 'pari', 'tuna'])
+  if (roll < (cumulative += chances.epic)) return getFromPool(['coelacanth', 'arapaima'])
+  return getFromPool(['naga_laut', 'kraken'])
+}
 
+function getFromPool(pool) {
   return pool[Math.floor(Math.random() * pool.length)]
 }
 
@@ -97,8 +129,20 @@ export async function handleFishing(interaction) {
     // Set cooldown
     fishingCooldown.set(user.id, now)
 
-    // Dapat ikan random
-    const fishId = getRandomFish()
+    // Ambil equip user
+    const { data: userData } = await supabase
+      .from('levels')
+      .select('equipped_pancing, equipped_umpan')
+      .eq('user_id', user.id)
+      .single()
+
+    const pancingId = userData?.equipped_pancing || 'pancing_bambu'
+    const umpanId = userData?.equipped_umpan || 'cacing'
+    const pancing = PANCING_LIST[pancingId]
+    const umpan = UMPAN_LIST[umpanId]
+
+    // Dapat ikan random berdasarkan equip
+    const fishId = getRandomFish(pancingId, umpanId)
     const fish = FISH_LIST[fishId]
 
     // Simpan ke fish_inventory
@@ -131,27 +175,27 @@ export async function handleFishing(interaction) {
 
     const embed = new EmbedBuilder()
       .setTitle('🎣 Mancing!')
-      .setDescription(`${fish.rarityEmoji} **${fish.rarity.toUpperCase()}** — Kamu dapat **${fish.emoji} ${fish.name}**!`)
+      .setDescription(
+        fish.rarity === 'legendary'
+          ? `🌟 **LEGENDARY!** 🌟\nLuar biasa! Kamu dapat **${fish.emoji} ${fish.name}**!`
+          : `${fish.rarityEmoji} **${fish.rarity.toUpperCase()}** — Kamu dapat **${fish.emoji} ${fish.name}**!`
+      )
       .addFields(
         { name: '🐟 Ikan', value: `${fish.emoji} ${fish.name}`, inline: true },
         { name: '💰 Estimasi Harga', value: `${fish.minPrice}-${fish.maxPrice} koin`, inline: true },
+        { name: '🎣 Pancing', value: `${pancing.emoji} ${pancing.name}`, inline: true },
+        { name: '🪱 Umpan', value: `${umpan.emoji} ${umpan.name}`, inline: true },
       )
       .setColor(color)
       .setFooter({ text: 'Gunakan /fish sell untuk jual ikan!' })
       .setTimestamp()
 
-    // Kalau legendary, tambahin special message
-    if (fish.rarity === 'legendary') {
-      embed.setDescription(`🌟 **LEGENDARY!** 🌟\nLuar biasa! Kamu dapat **${fish.emoji} ${fish.name}**!`)
-    }
-
-    interaction.reply({ embeds: [embed] })
+    return interaction.reply({ embeds: [embed] })
   }
 
   if (sub === 'sell') {
     const fishChoice = interaction.options.getString('ikan')
 
-    // Ambil data user
     const { data: userData } = await supabase
       .from('levels')
       .select('*')
@@ -161,7 +205,6 @@ export async function handleFishing(interaction) {
     if (!userData) return interaction.reply({ content: '❌ Kamu belum punya akun!', flags: 64 })
 
     if (fishChoice) {
-      // Jual ikan tertentu
       const { data: fishData } = await supabase
         .from('fish_inventory')
         .select('*')
@@ -177,13 +220,11 @@ export async function handleFishing(interaction) {
       const pricePerFish = Math.floor(Math.random() * (fish.maxPrice - fish.minPrice + 1)) + fish.minPrice
       const totalPrice = pricePerFish * fishData.quantity
 
-      // Update koin
       await supabase
         .from('levels')
         .update({ coins: (userData.coins || 0) + totalPrice })
         .eq('user_id', user.id)
 
-      // Hapus ikan dari inventory
       await supabase
         .from('fish_inventory')
         .delete()
@@ -201,10 +242,9 @@ export async function handleFishing(interaction) {
         .setColor(0x57F287)
         .setTimestamp()
 
-      interaction.reply({ embeds: [embed] })
+      return interaction.reply({ embeds: [embed] })
 
     } else {
-      // Jual semua ikan
       const { data: allFish } = await supabase
         .from('fish_inventory')
         .select('*')
@@ -225,13 +265,11 @@ export async function handleFishing(interaction) {
         soldList.push(`${fish.emoji} ${fish.name} x${fishItem.quantity} = ${total} koin`)
       }
 
-      // Update koin
       await supabase
         .from('levels')
         .update({ coins: (userData.coins || 0) + totalCoins })
         .eq('user_id', user.id)
 
-      // Hapus semua ikan
       await supabase
         .from('fish_inventory')
         .delete()
@@ -247,7 +285,7 @@ export async function handleFishing(interaction) {
         .setColor(0x57F287)
         .setTimestamp()
 
-      interaction.reply({ embeds: [embed] })
+      return interaction.reply({ embeds: [embed] })
     }
   }
 }
