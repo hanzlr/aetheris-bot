@@ -65,6 +65,10 @@ import {
   helpData,
   handleHelp,
 } from "./commands/help/help.js";
+import {
+  roastData,
+  handleRoast,
+} from "./commands/roast/roast.js";
 
 const client = new Client({
   intents: [
@@ -91,6 +95,7 @@ const commands = [
   shopData.toJSON(),
   equipData.toJSON(),
   helpData.toJSON(),
+  roastData.toJSON(),
 ];
 
 client.once("clientReady", async () => {
@@ -139,6 +144,7 @@ client.on("interactionCreate", async (interaction) => {
       if (interaction.commandName === "shop") await handleShop(interaction);
       if (interaction.commandName === "equip") await handleEquip(interaction);
       if (interaction.commandName === "help") await handleHelp(interaction);
+      if (interaction.commandName === "roast") await handleRoast(interaction);
     }
 
     if (interaction.isButton()) {

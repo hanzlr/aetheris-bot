@@ -15,6 +15,7 @@ export const helpData = new SlashCommandBuilder()
         { name: '🎣 Fishing', value: 'fishing' },
         { name: '🏪 Shop & Equip', value: 'shop' },
         { name: '🎒 Inventory & Profil', value: 'profil' },
+        { name: '🔥 Roast', value: 'roast' },
       )
   )
 
@@ -78,6 +79,14 @@ export async function handleHelp(interaction) {
         { name: '/lootbox open [type]', desc: 'Buka loot box' },
       ]
     },
+    roast: {
+      label: '🔥 Roast',
+      commands: [
+        { name: '/roast', desc: 'Roast diri sendiri' },
+        { name: '/roast @user', desc: 'Roast member lain' },
+      ]
+    },
+
     profil: {
       label: '🎒 Inventory & Profil',
       commands: [
