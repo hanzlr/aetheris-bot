@@ -49,11 +49,14 @@ import {
   inventoryData,
   handleInventory,
 } from "./commands/inventory/inventory.js";
-
 import {
   fishingData,
   handleFishing,
 } from "./commands/fishing/fishing.js";
+import {
+  shopData,
+  handleShop,
+} from "./commands/shop/shop.js";
 
 const client = new Client({
   intents: [
@@ -77,6 +80,7 @@ const commands = [
   lootboxData.toJSON(),
   inventoryData.toJSON(),
   fishingData.toJSON(),
+  shopData.toJSON(),
 ];
 
 client.once("clientReady", async () => {
@@ -122,6 +126,7 @@ client.on("interactionCreate", async (interaction) => {
       if (interaction.commandName === "lootbox") await handleLootbox(interaction);
       if (interaction.commandName === "inventory") await handleInventory(interaction);
       if (interaction.commandName === "fish") await handleFishing(interaction);
+      if (interaction.commandName === "shop") await handleShop(interaction);
     }
 
     if (interaction.isButton()) {
