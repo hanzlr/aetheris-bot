@@ -69,6 +69,7 @@ import {
   roastData,
   handleRoast,
 } from "./commands/roast/roast.js";
+import { startServer } from "./server.js";
 
 const client = new Client({
   intents: [
@@ -156,5 +157,8 @@ client.on("interactionCreate", async (interaction) => {
     console.error("Interaction error:", error);
   }
 });
+
+// Start Express server
+startServer(client, 3000);
 
 client.login(process.env.DISCORD_TOKEN);
