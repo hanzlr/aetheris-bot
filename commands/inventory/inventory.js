@@ -1,6 +1,8 @@
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js'
 import supabase from '../../database/supabase.js'
 import { FISH_LIST } from '../fishing/fishing.js'
+import { SHOP_ITEMS } from '../shop/shop.js'
+import { PANCING_LIST, UMPAN_LIST } from '../equip/equip.js'
 
 export const inventoryData = new SlashCommandBuilder()
   .setName('inventory')
@@ -48,6 +50,40 @@ export async function handleInventory(interaction) {
       }).join('\n')
     : 'Belum ada ikan'
 
+  // Ambil item shop
+  const { data: shopItems } = await supabase
+    .from('shop_inventory')
+    .select('*')
+    .eq('user_id', target.id)
+
+  // Pisah item shop berdasarkan kategori
+  const pancingItems = shopItems?.filter(i => SHOP_ITEMS[i.item_id]?.category === 'fishing' && i.item_id.startsWith('pancing')) || []
+  const umpanItems = shopItems?.filter(i => SHOP_ITEMS[i.item_id]?.category === 'fishing' && i.item_id.startsWith('umpan')) || []
+  const boostItems = shopItems?.filter(i => SHOP_ITEMS[i.item_id]?.category === 'boost') || []
+
+  const pancingText = pancingItems.length > 0
+    ? pancingItems.map(i => {
+        const item = SHOP_ITEMS[i.item_id]
+        const isEquipped = userData.equipped_pancing === i.item_id
+        return `${item.emoji} ${item.name} x${i.quantity}${isEquipped ? ' ✅ **[Equipped]**' : ''}`
+      }).join('\n')
+    : '🎣 Pancing Bambu (Default)'
+
+  const umpanText = umpanItems.length > 0
+    ? umpanItems.map(i => {
+        const item = SHOP_ITEMS[i.item_id]
+        const isEquipped = userData.equipped_umpan === i.item_id
+        return `${item.emoji} ${item.name} x${i.quantity}${isEquipped ? ' ✅ **[Equipped]**' : ''}`
+      }).join('\n')
+    : '🪱 Cacing (Default)'
+
+  const boostText = boostItems.length > 0
+    ? boostItems.map(i => {
+        const item = SHOP_ITEMS[i.item_id]
+        return `${item.emoji} ${item.name} x${i.quantity}`
+      }).join('\n')
+    : 'Belum ada boost'
+
   // Ambil badges
   const { data: badges } = await supabase
     .from('badges')
@@ -57,6 +93,10 @@ export async function handleInventory(interaction) {
   const badgeList = badges?.length > 0
     ? badges.map(b => `🏅 ${b.badge_id}`).join('\n')
     : 'Belum ada badge'
+
+  // Equip sekarang
+  const equippedPancing = PANCING_LIST[userData.equipped_pancing || 'pancing_bambu']
+  const equippedUmpan = UMPAN_LIST[userData.equipped_umpan || 'cacing']
 
   const embed = new EmbedBuilder()
     .setTitle(`🎒 Inventory ${target.username}`)
@@ -68,6 +108,29 @@ export async function handleInventory(interaction) {
           `💳 Wallet: ${(userData.coins || 0).toLocaleString()} koin`,
           `🏦 Bank: ${(userData.bank || 0).toLocaleString()} koin`,
         ].join('\n'),
+        inline: false
+      },
+      {
+        name: '🎣 Equip Sekarang',
+        value: [
+          `🎣 Pancing: ${equippedPancing.emoji} ${equippedPancing.name}`,
+          `🪱 Umpan: ${equippedUmpan.emoji} ${equippedUmpan.name}`,
+        ].join('\n'),
+        inline: false
+      },
+      {
+        name: '🎣 Pancing',
+        value: pancingText,
+        inline: true
+      },
+      {
+        name: '🪱 Umpan',
+        value: umpanText,
+        inline: true
+      },
+      {
+        name: '⚡ Boost',
+        value: boostText,
         inline: false
       },
       {
