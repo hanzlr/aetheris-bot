@@ -1,67 +1,83 @@
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js'
 import supabase from '../../database/supabase.js'
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js'
 
-export function xpForLevel(level) {
-  return 5 * (level ** 2) + 50 * level + 100
+const xpCooldown = new Map()
+
+// Cek event aktif
+async function getActiveEvent() {
+  try {
+    const { data } = await supabase
+      .from('events')
+      .select('*')
+      .eq('is_active', true)
+      .gte('ends_at', new Date().toISOString())
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single()
+    return data
+  } catch {
+    return null
+  }
 }
 
 export async function handleXP(message) {
   if (message.author.bot) return
+  if (message.channel.type === 1) return
 
   const userId = message.author.id
   const username = message.author.username
+  const now = Date.now()
+  const lastXP = xpCooldown.get(userId) || 0
 
-  let { data: user } = await supabase
+  if (now - lastXP < 60 * 1000) return
+  xpCooldown.set(userId, now)
+
+  // Cek event double XP
+  const event = await getActiveEvent()
+  let xpGain = Math.floor(Math.random() * 11) + 15
+  if (event?.event_type === 'double_xp') xpGain *= event.multiplier || 2
+
+  const { data } = await supabase
     .from('levels')
     .select('*')
     .eq('user_id', userId)
     .single()
 
-  if (!user) {
-    const { data: newUser } = await supabase
-      .from('levels')
-      .insert({ user_id: userId, username, xp: 0, level: 0, total_messages: 0 })
-      .select()
-      .single()
-    user = newUser
+  if (!data) {
+    await supabase.from('levels').insert({
+      user_id: userId,
+      username,
+      xp: xpGain,
+      level: 0,
+      total_messages: 1,
+    })
+    return
   }
 
-  const now = new Date()
-  const lastXP = new Date(user.last_xp)
-  const diff = (now - lastXP) / 1000 / 60
-  if (diff < 1) return
+  const newXP = data.xp + xpGain
+  const newMessages = data.total_messages + 1
+  let newLevel = data.level
 
-  const xpGained = Math.floor(Math.random() * 11) + 15
-  const newXP = user.xp + xpGained
-  const newMessages = user.total_messages + 1
+  const xpNeeded = 5 * ((newLevel + 1) ** 2) + 50 * (newLevel + 1) + 100
+  let leveledUp = false
 
-  let newLevel = user.level
-  while (newXP >= xpForLevel(newLevel + 1)) {
+  if (newXP >= xpNeeded) {
     newLevel++
+    leveledUp = true
   }
 
   await supabase
     .from('levels')
-    .update({
-      xp: newXP,
-      level: newLevel,
-      total_messages: newMessages,
-      username,
-      last_xp: now.toISOString()
-    })
+    .update({ xp: newXP, level: newLevel, total_messages: newMessages, username })
     .eq('user_id', userId)
 
-  if (newLevel > user.level) {
-    const embed = new EmbedBuilder()
-      .setTitle('🎉 Level Up!')
-      .setDescription(`Selamat ${message.author}! Kamu naik ke **Level ${newLevel}!** 🚀`)
-      .setColor(0xFFD700)
-      .setTimestamp()
-    message.channel.send({ embeds: [embed] })
+  if (leveledUp) {
+    message.channel.send(
+      `🎉 Selamat **${username}**! Kamu naik ke **Level ${newLevel}**!`
+    )
   }
 }
 
-// Subcommand /level
 export const levelData = new SlashCommandBuilder()
   .setName('level')
   .setDescription('Sistem leveling')
@@ -71,7 +87,7 @@ export const levelData = new SlashCommandBuilder()
   )
   .addSubcommand(sub =>
     sub.setName('leaderboard')
-      .setDescription('Lihat ranking server')
+      .setDescription('Lihat leaderboard server')
   )
 
 export async function handleLevel(interaction) {
@@ -79,27 +95,36 @@ export async function handleLevel(interaction) {
 
   if (sub === 'rank') {
     const user = interaction.user
+
     const { data } = await supabase
       .from('levels')
       .select('*')
       .eq('user_id', user.id)
       .single()
 
-    if (!data) return interaction.reply({ content: '❌ Kamu belum punya XP! Mulai ngobrol dulu.', flags: 64 })
+    if (!data) return interaction.reply({ content: '❌ Kamu belum punya akun!', flags: 64 })
 
-    const xpNeeded = xpForLevel(data.level + 1)
+    const xpNeeded = 5 * ((data.level + 1) ** 2) + 50 * (data.level + 1) + 100
+    const percent = Math.min(Math.floor((data.xp / xpNeeded) * 100), 100)
+    const filled = Math.floor(percent / 10)
+    const bar = `[${'█'.repeat(filled)}${'░'.repeat(10 - filled)}] ${percent}%`
+
+    const event = await getActiveEvent()
+    const eventText = event?.event_type === 'double_xp' ? '\n⚡ **Double XP Event Aktif!**' : ''
+
     const embed = new EmbedBuilder()
-      .setTitle(`📊 Rank ${user.username}`)
+      .setTitle(`⭐ Rank ${user.username}`)
       .setThumbnail(user.displayAvatarURL())
       .addFields(
         { name: '⭐ Level', value: `${data.level}`, inline: true },
         { name: '✨ XP', value: `${data.xp} / ${xpNeeded}`, inline: true },
         { name: '💬 Total Pesan', value: `${data.total_messages}`, inline: true },
+        { name: '📊 Progress', value: bar + eventText, inline: false },
       )
       .setColor(0x5865F2)
       .setTimestamp()
 
-    interaction.reply({ embeds: [embed] })
+    return interaction.reply({ embeds: [embed] })
   }
 
   if (sub === 'leaderboard') {
@@ -109,20 +134,19 @@ export async function handleLevel(interaction) {
       .order('xp', { ascending: false })
       .limit(10)
 
-    if (!data || data.length === 0) return interaction.reply({ content: '❌ Belum ada data ranking!', flags: 64 })
+    if (!data || data.length === 0) return interaction.reply({ content: '❌ Belum ada data!', flags: 64 })
 
-    const medals = ['🥇', '🥈', '🥉']
-    const description = data.map((user, index) => {
-      const medal = medals[index] || `**${index + 1}.**`
-      return `${medal} **${user.username}** — Level ${user.level} (${user.xp} XP)`
+    const list = data.map((m, i) => {
+      const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`
+      return `${medal} **${m.username}** — Level ${m.level} (${m.xp} XP)`
     }).join('\n')
 
     const embed = new EmbedBuilder()
       .setTitle('🏆 Leaderboard UMB Esport')
-      .setDescription(description)
+      .setDescription(list)
       .setColor(0xFFD700)
       .setTimestamp()
 
-    interaction.reply({ embeds: [embed] })
+    return interaction.reply({ embeds: [embed] })
   }
 }

@@ -1,6 +1,22 @@
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js'
 import supabase from '../../database/supabase.js'
 
+async function getActiveEvent() {
+  try {
+    const { data } = await supabase
+      .from('events')
+      .select('*')
+      .eq('is_active', true)
+      .gte('ends_at', new Date().toISOString())
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single()
+    return data
+  } catch {
+    return null
+  }
+}
+
 export const economyData = new SlashCommandBuilder()
   .setName('economy')
   .setDescription('Sistem ekonomi')
@@ -41,7 +57,16 @@ export async function handleEconomy(interaction) {
       }
     }
 
-    const coinsGained = Math.floor(Math.random() * 151) + 100
+    // Cek event double coins
+    const event = await getActiveEvent()
+    let coinsGained = Math.floor(Math.random() * 151) + 100
+    let eventText = ''
+
+    if (event?.event_type === 'double_coins') {
+      coinsGained *= event.multiplier || 2
+      eventText = `\n💰 **Double Coins Event Aktif! x${event.multiplier || 2}**`
+    }
+
     const newCoins = (data.coins || 0) + coinsGained
 
     await supabase
@@ -51,7 +76,7 @@ export async function handleEconomy(interaction) {
 
     const embed = new EmbedBuilder()
       .setTitle('🎁 Daily Reward!')
-      .setDescription(`${user} berhasil claim daily reward!`)
+      .setDescription(`${user} berhasil claim daily reward!${eventText}`)
       .addFields(
         { name: '💰 Koin Didapat', value: `+${coinsGained} koin`, inline: true },
         { name: '💳 Total Koin', value: `${newCoins} koin`, inline: true }
@@ -71,6 +96,19 @@ export async function handleEconomy(interaction) {
 
     if (!data) return interaction.reply({ content: '❌ Kamu belum punya akun! Mulai ngobrol dulu.', flags: 64 })
 
+    // Cek event aktif
+    const event = await getActiveEvent()
+    let eventText = ''
+    if (event) {
+      const labels = {
+        double_xp: '🎉 Double XP',
+        double_coins: '💰 Double Coins',
+        fishing_frenzy: '🎣 Fishing Frenzy',
+        loot_rain: '🎁 Loot Rain',
+      }
+      eventText = `\n⚡ Event aktif: **${labels[event.event_type]}**`
+    }
+
     const embed = new EmbedBuilder()
       .setTitle(`💰 Balance ${user.username}`)
       .setThumbnail(user.displayAvatarURL())
@@ -80,6 +118,7 @@ export async function handleEconomy(interaction) {
         { name: '⭐ Level', value: `${data.level}`, inline: true },
       )
       .setColor(0xFFD700)
+      .setDescription(eventText || null)
       .setTimestamp()
 
     interaction.reply({ embeds: [embed] })

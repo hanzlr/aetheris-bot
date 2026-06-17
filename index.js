@@ -69,6 +69,10 @@ import {
   roastData,
   handleRoast,
 } from "./commands/roast/roast.js";
+import {
+  eventData,
+  handleEvent,
+} from "./commands/event/event.js";
 import { startServer } from "./server.js";
 
 const client = new Client({
@@ -97,6 +101,7 @@ const commands = [
   equipData.toJSON(),
   helpData.toJSON(),
   roastData.toJSON(),
+  eventData.toJSON(),
 ];
 
 client.once("clientReady", async () => {
@@ -146,6 +151,7 @@ client.on("interactionCreate", async (interaction) => {
       if (interaction.commandName === "equip") await handleEquip(interaction);
       if (interaction.commandName === "help") await handleHelp(interaction);
       if (interaction.commandName === "roast") await handleRoast(interaction);
+      if (interaction.commandName === "event") await handleEvent(interaction);
     }
 
     if (interaction.isButton()) {
