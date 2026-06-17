@@ -19,6 +19,7 @@ export const helpData = new SlashCommandBuilder()
         { name: "🏪 Shop & Equip", value: "shop" },
         { name: "🎒 Inventory & Profil", value: "profil" },
         { name: "🔥 Roast", value: "roast" },
+        { name: "⚡ Boost", value: "boost" },
       ),
   );
 
@@ -119,6 +120,13 @@ export async function handleHelp(interaction) {
         { name: "/stats view", desc: "Lihat statistik kamu" },
         { name: "/stats view @user", desc: "Lihat statistik member lain" },
         { name: "/stats server", desc: "Lihat statistik server" },
+      ],
+    },
+    boost: {
+      label: "⚡ Boost",
+      commands: [
+        { name: "/boost use [item]", desc: "Aktifkan boost dari inventory" },
+        { name: "/boost info", desc: "Lihat boost yang sedang aktif" },
       ],
     },
   };
