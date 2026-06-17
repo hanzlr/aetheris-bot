@@ -29,49 +29,30 @@ Bot Discord resmi untuk komunitas UMB Esport. Dibangun dengan Node.js dan Discor
 - **Module**: ES Modules (`"type": "module"`)
 
 ## 📁 Struktur Folder
+```
 umb-esport-bot/
-
 ├── index.js                    # Entry point
-
 ├── server.js                   # Express API server
-
 ├── database/
-
 │   └── supabase.js             # Supabase client
-
 └── commands/
-
-├── ticket/
-
-├── leveling/
-
-├── currency/
-
-├── bank/
-
-├── games/
-
-├── profile/
-
-├── stats/
-
-├── lootbox/
-
-├── inventory/
-
-├── fishing/
-
-├── shop/
-
-├── equip/
-
-├── boost/
-
-├── help/
-
-├── roast/
-
-└── event/
+    ├── ticket/
+    ├── leveling/
+    ├── currency/
+    ├── bank/
+    ├── games/
+    ├── profile/
+    ├── stats/
+    ├── lootbox/
+    ├── inventory/
+    ├── fishing/
+    ├── shop/
+    ├── equip/
+    ├── boost/
+    ├── help/
+    ├── roast/
+    └── event/
+```
 
 ## ⚙️ Environment Variables
 
