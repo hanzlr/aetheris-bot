@@ -10,6 +10,22 @@ export const BADGES = {
   high_roller: { emoji: "🎰", name: "High Roller", desc: "Menang slot 5 kali" },
   rich: { emoji: "💰", name: "Rich", desc: "Punya 10.000 koin" },
   saver: { emoji: "🏦", name: "Saver", desc: "Simpan 5.000 koin di bank" },
+  // Badge dari loot box
+  lucky_common: {
+    emoji: "🎁",
+    name: "Lucky Common",
+    desc: "Dapat dari Common Loot Box",
+  },
+  lucky_rare: {
+    emoji: "💜",
+    name: "Lucky Rare",
+    desc: "Dapat dari Rare Loot Box",
+  },
+  lucky_legendary: {
+    emoji: "🌟",
+    name: "Lucky Legendary",
+    desc: "Dapat dari Legendary Loot Box",
+  },
   daily_streak: {
     emoji: "📅",
     name: "Consistent",
