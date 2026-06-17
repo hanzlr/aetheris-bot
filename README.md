@@ -109,37 +109,50 @@ node index.js
 
 ## 📋 Slash Commands
 
+### 🎫 Ticket
 | Command | Fungsi |
 |---|---|
 | `/ticket` | Buat panel ticket |
-| `/level rank` | Lihat rank & XP |
-| `/level leaderboard` | Leaderboard server |
-| `/economy daily` | Claim koin harian |
-| `/economy balance` | Cek saldo |
-| `/bank deposit` | Simpan koin ke bank |
-| `/bank withdraw` | Ambil koin dari bank |
-| `/game dice` | Main dadu |
-| `/game coinflip` | Main koin |
-| `/game slot` | Main slot |
-| `/game blackjack` | Main blackjack |
-| `/fish cast` | Mancing ikan |
-| `/fish sell` | Jual ikan |
-| `/shop view` | Lihat shop |
-| `/shop buy` | Beli item |
-| `/equip pancing` | Ganti pancing |
-| `/equip umpan` | Ganti umpan |
-| `/lootbox buy` | Beli loot box |
-| `/lootbox open` | Buka loot box |
-| `/boost use` | Aktifkan boost |
-| `/boost info` | Lihat boost aktif |
-| `/profile view` | Lihat profil |
-| `/profile badges` | Lihat badge |
-| `/stats view` | Lihat statistik |
-| `/stats server` | Statistik server |
-| `/inventory` | Lihat inventory |
-| `/event info` | Lihat event aktif |
-| `/roast` | Roast member |
-| `/help` | Daftar command |
+
+### ⭐ Leveling & Ekonomi
+| Command | Fungsi | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Command | Fungsi |
+|---|---|---|---|---|
+| `/level rank` | Lihat rank & XP | | `/economy daily` | Claim koin harian |
+| `/level leaderboard` | Leaderboard server | | `/economy balance` | Cek saldo |
+| `/bank deposit` | Simpan koin ke bank | | `/bank withdraw` | Ambil koin dari bank |
+
+### 🎮 Games
+| Command | Fungsi | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Command | Fungsi |
+|---|---|---|---|---|
+| `/game dice` | Main dadu | | `/game coinflip` | Main koin |
+| `/game slot` | Main slot | | `/game blackjack` | Main blackjack |
+
+### 🎣 Fishing & Equip
+| Command | Fungsi | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Command | Fungsi |
+|---|---|---|---|---|
+| `/fish cast` | Mancing ikan | | `/fish sell` | Jual ikan |
+| `/equip pancing` | Ganti pancing | | `/equip umpan` | Ganti umpan |
+| `/equip info` | Lihat equip aktif | | | |
+
+### 🏪 Shop & Inventory
+| Command | Fungsi | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Command | Fungsi |
+|---|---|---|---|---|
+| `/shop view` | Lihat shop | | `/shop buy` | Beli item |
+| `/lootbox buy` | Beli loot box | | `/lootbox open` | Buka loot box |
+| `/boost use` | Aktifkan boost | | `/boost info` | Lihat boost aktif |
+| `/inventory` | Lihat inventory | | | |
+
+### 🎒 Profil & Statistik
+| Command | Fungsi | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Command | Fungsi |
+|---|---|---|---|---|
+| `/profile view` | Lihat profil | | `/profile badges` | Lihat badge |
+| `/stats view` | Lihat statistik | | `/stats server` | Statistik server |
+
+### 🎉 Event & Lainnya
+| Command | Fungsi | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Command | Fungsi |
+|---|---|---|---|---|
+| `/event info` | Lihat event aktif | | `/roast` | Roast member |
+| `/help` | Daftar command | | | |
 
 ## 🔗 Links
 
