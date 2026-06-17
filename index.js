@@ -74,6 +74,10 @@ import {
   handleEvent,
 } from "./commands/event/event.js";
 import { startServer } from "./server.js";
+import {
+  boostData,
+  handleBoost,
+} from "./commands/boost/boost.js";
 
 const client = new Client({
   intents: [
@@ -102,6 +106,7 @@ const commands = [
   helpData.toJSON(),
   roastData.toJSON(),
   eventData.toJSON(),
+  boostData.toJSON(),
 ];
 
 client.once("clientReady", async () => {
@@ -152,6 +157,7 @@ client.on("interactionCreate", async (interaction) => {
       if (interaction.commandName === "help") await handleHelp(interaction);
       if (interaction.commandName === "roast") await handleRoast(interaction);
       if (interaction.commandName === "event") await handleEvent(interaction);
+      if (interaction.commandName === "boost") await handleBoost(interaction);
     }
 
     if (interaction.isButton()) {
