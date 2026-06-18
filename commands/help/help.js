@@ -20,6 +20,7 @@ export const helpData = new SlashCommandBuilder()
         { name: "🎒 Inventory & Profil", value: "profil" },
         { name: "🔥 Roast", value: "roast" },
         { name: "⚡ Boost", value: "boost" },
+        { name: "⭐ Premium", value: "premium" },
       ),
   );
 
@@ -127,6 +128,22 @@ export async function handleHelp(interaction) {
       commands: [
         { name: "/boost use [item]", desc: "Aktifkan boost dari inventory" },
         { name: "/boost info", desc: "Lihat boost yang sedang aktif" },
+      ],
+    },
+    premium: {
+      label: "⭐ Premium",
+      commands: [
+        { name: "/premium redeem [key]", desc: "Redeem premium key" },
+        { name: "/premium status", desc: "Lihat status premium kamu" },
+        {
+          name: "/gift @user [jumlah]",
+          desc: "Transfer koin ke member lain (Premium)",
+        },
+        { name: "/history", desc: "Lihat riwayat transaksi (Premium)" },
+        {
+          name: "/game crash [taruhan]",
+          desc: "Game Crash multiplier (Premium)",
+        },
       ],
     },
   };
