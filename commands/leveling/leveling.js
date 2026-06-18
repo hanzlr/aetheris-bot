@@ -1,6 +1,7 @@
 import supabase from "../../database/supabase.js";
 import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
-import { getActiveBoost } from '../boost/boost.js'
+import { getActiveBoost } from "../boost/boost.js";
+import { isPremium } from "../premium/premium.js";
 
 const xpCooldown = new Map();
 
@@ -41,6 +42,10 @@ export async function handleXP(message) {
   // Cek XP boost personal
   const xpBoost = await getActiveBoost(userId, "xp_boost");
   if (xpBoost) xpGain *= 2;
+
+  // Cek premium XP bonus
+  const userIsPremium = await isPremium(userId);
+  if (userIsPremium) xpGain = Math.floor(xpGain * 1.5);
 
   const { data } = await supabase
     .from("levels")

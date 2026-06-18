@@ -19,10 +19,7 @@ import {
   handleXP,
   handleLevel,
 } from "./commands/leveling/leveling.js";
-import {
-  economyData,
-  handleEconomy,
-} from "./commands/currency/currency.js";
+import { economyData, handleEconomy } from "./commands/currency/currency.js";
 import {
   bankData,
   handleBank,
@@ -32,52 +29,27 @@ import {
   gameData,
   handleGame,
   handleBlackjackButton,
+  handleCrashButton,
 } from "./commands/games/games.js";
-import {
-  profileData,
-  handleProfile,
-} from "./commands/profile/profile.js";
-import {
-  statsData,
-  handleStats,
-} from "./commands/stats/stats.js";
-import {
-  lootboxData,
-  handleLootbox,
-} from "./commands/lootbox/lootbox.js";
+import { profileData, handleProfile } from "./commands/profile/profile.js";
+import { statsData, handleStats } from "./commands/stats/stats.js";
+import { lootboxData, handleLootbox } from "./commands/lootbox/lootbox.js";
 import {
   inventoryData,
   handleInventory,
 } from "./commands/inventory/inventory.js";
-import {
-  fishingData,
-  handleFishing,
-} from "./commands/fishing/fishing.js";
-import {
-  shopData,
-  handleShop,
-} from "./commands/shop/shop.js";
-import {
-  equipData,
-  handleEquip,
-} from "./commands/equip/equip.js";
-import {
-  helpData,
-  handleHelp,
-} from "./commands/help/help.js";
-import {
-  roastData,
-  handleRoast,
-} from "./commands/roast/roast.js";
-import {
-  eventData,
-  handleEvent,
-} from "./commands/event/event.js";
+import { fishingData, handleFishing } from "./commands/fishing/fishing.js";
+import { shopData, handleShop } from "./commands/shop/shop.js";
+import { equipData, handleEquip } from "./commands/equip/equip.js";
+import { helpData, handleHelp } from "./commands/help/help.js";
+import { roastData, handleRoast } from "./commands/roast/roast.js";
+import { eventData, handleEvent } from "./commands/event/event.js";
 import { startServer } from "./server.js";
-import {
-  boostData,
-  handleBoost,
-} from "./commands/boost/boost.js";
+import { boostData, handleBoost } from "./commands/boost/boost.js";
+
+import { premiumData, handlePremium } from "./commands/premium/premium.js";
+import { giftData, handleGift } from "./commands/gift/gift.js";
+import { historyData, handleHistory } from "./commands/history/history.js";
 
 const client = new Client({
   intents: [
@@ -107,6 +79,9 @@ const commands = [
   roastData.toJSON(),
   eventData.toJSON(),
   boostData.toJSON(),
+  premiumData.toJSON(),
+  giftData.toJSON(),
+  historyData.toJSON(),
 ];
 
 client.once("clientReady", async () => {
@@ -114,7 +89,7 @@ client.once("clientReady", async () => {
   try {
     await rest.put(
       Routes.applicationGuildCommands(client.user.id, process.env.GUILD_ID),
-      { body: commands }
+      { body: commands },
     );
     console.log("✅ Slash commands berhasil didaftarkan!");
   } catch (error) {
@@ -144,13 +119,17 @@ client.on("interactionCreate", async (interaction) => {
         await sendTicketPanel(interaction.channel);
       }
       if (interaction.commandName === "level") await handleLevel(interaction);
-      if (interaction.commandName === "economy") await handleEconomy(interaction);
+      if (interaction.commandName === "economy")
+        await handleEconomy(interaction);
       if (interaction.commandName === "bank") await handleBank(interaction);
       if (interaction.commandName === "game") await handleGame(interaction);
-      if (interaction.commandName === "profile") await handleProfile(interaction);
+      if (interaction.commandName === "profile")
+        await handleProfile(interaction);
       if (interaction.commandName === "stats") await handleStats(interaction);
-      if (interaction.commandName === "lootbox") await handleLootbox(interaction);
-      if (interaction.commandName === "inventory") await handleInventory(interaction);
+      if (interaction.commandName === "lootbox")
+        await handleLootbox(interaction);
+      if (interaction.commandName === "inventory")
+        await handleInventory(interaction);
       if (interaction.commandName === "fish") await handleFishing(interaction);
       if (interaction.commandName === "shop") await handleShop(interaction);
       if (interaction.commandName === "equip") await handleEquip(interaction);
@@ -158,12 +137,28 @@ client.on("interactionCreate", async (interaction) => {
       if (interaction.commandName === "roast") await handleRoast(interaction);
       if (interaction.commandName === "event") await handleEvent(interaction);
       if (interaction.commandName === "boost") await handleBoost(interaction);
+      if (interaction.commandName === "premium")
+        await handlePremium(interaction);
+      if (interaction.commandName === "gift") await handleGift(interaction);
+      if (interaction.commandName === "history")
+        await handleHistory(interaction);
     }
 
     if (interaction.isButton()) {
-      if (interaction.customId === "open_ticket") await handleTicket(interaction);
-      if (interaction.customId === "close_ticket") await handleCloseTicket(interaction);
-      if (interaction.customId === "bj_hit" || interaction.customId === "bj_stand") await handleBlackjackButton(interaction);
+      if (interaction.customId === "open_ticket")
+        await handleTicket(interaction);
+      if (interaction.customId === "close_ticket")
+        await handleCloseTicket(interaction);
+      if (
+        interaction.customId === "bj_hit" ||
+        interaction.customId === "bj_stand"
+      )
+        await handleBlackjackButton(interaction);
+      if (
+        interaction.customId === "crash_cashout" ||
+        interaction.customId === "crash_lanjut"
+      )
+        await handleCrashButton(interaction);
     }
   } catch (error) {
     console.error("Interaction error:", error);

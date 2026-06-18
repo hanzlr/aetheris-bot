@@ -1,5 +1,6 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import supabase from "../../database/supabase.js";
+import { isPremium } from "../premium/premium.js";
 
 // Daftar semua badge
 export const BADGES = {
@@ -144,8 +145,12 @@ export async function handleProfile(interaction) {
     const xpNeeded = 5 * (data.level + 1) ** 2 + 50 * (data.level + 1) + 100;
     const xpBar = buildXPBar(data.xp, xpNeeded);
 
+    // Cek premium
+    const userIsPremium = await isPremium(target.id);
+    const premiumTag = userIsPremium ? " ⭐ [PREMIUM]" : "";
+
     const embed = new EmbedBuilder()
-      .setTitle(`🎮 Profil ${target.username}`)
+      .setTitle(`🎮 Profil ${target.username}${premiumTag}`)
       .setThumbnail(target.displayAvatarURL())
       .addFields(
         { name: "⭐ Level", value: `${data.level}`, inline: true },

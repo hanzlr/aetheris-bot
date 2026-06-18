@@ -1,6 +1,7 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import supabase from "../../database/supabase.js";
 import { PANCING_LIST, UMPAN_LIST } from "../equip/equip.js";
+import { isPremium } from "../premium/premium.js";
 
 // Daftar semua ikan
 export const FISH_LIST = {
@@ -222,7 +223,8 @@ export async function handleFishing(interaction) {
       .limit(1)
       .single();
 
-    const cooldown = eventData ? 10 : 30;
+    const userIsPremium = await isPremium(user.id);
+    const cooldown = eventData ? 10 : userIsPremium ? 15 : 30;
 
     if (diff < cooldown) {
       const sisa = Math.ceil(cooldown - diff);
