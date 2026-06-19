@@ -1,10 +1,18 @@
 import express from "express";
 import cors from "cors";
 import supabase from "./database/supabase.js";
+import rateLimit from "express-rate-limit";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+const limiter = rateLimit({
+  windowMs: 60 * 1000, // 1 menit
+  max: 30, // maksimal 30 request per menit per IP
+  message: { error: "Terlalu banyak request, coba lagi nanti." },
+});
+app.use(limiter);
 
 const SECRET_KEY = process.env.API_SECRET || "umb-esport-secret-key";
 
