@@ -14,17 +14,20 @@ Bot Discord resmi untuk komunitas UMB Esport. Dibangun dengan Node.js dan Discor
 - 🎫 **Ticket System** — Buat dan kelola ticket support
 - ⭐ **Leveling & XP** — Sistem level dari aktivitas chat
 - 💰 **Ekonomi** — Daily reward, wallet, dan bank
-- 🎮 **Mini Games** — Dice, Coinflip, Slot, Blackjack
+- 🎮 **Mini Games** — Dice, Coinflip, Slot, Blackjack, Crash (Premium)
 - 🎣 **Fishing** — Mancing ikan dengan berbagai rarity
 - 🏪 **Shop** — Beli item, pancing, umpan, dan badge eksklusif
 - 🎒 **Inventory** — Lihat semua item yang dimiliki
 - 🎁 **Loot Box** — Common, Rare, dan Legendary box
 - ⚡ **Boost System** — XP Boost, Coin Boost, Lucky Charm
-- 🏅 **Badge System** — Badge dari aktivitas dan shop
+- 🏅 **Badge System** — Badge dari aktivitas, shop, dan premium
 - 📊 **Statistik** — Statistik lengkap per member & server
 - 🎮 **Profile Card** — Profil lengkap member
 - 🔥 **Roast Me** — Roast member dengan sarkas
 - 🎉 **Event System** — Double XP, Double Coins, Fishing Frenzy, Loot Rain
+- ⭐ **Premium System** — Benefit eksklusif via redeem key
+- 💸 **Gift** — Transfer koin antar member (Premium)
+- 📊 **Transaction History** — Riwayat transaksi koin (Premium)
 - 📋 **Help Command** — Daftar semua command
 
 ## 🛠️ Tech Stack
@@ -36,6 +39,7 @@ Bot Discord resmi untuk komunitas UMB Esport. Dibangun dengan Node.js dan Discor
 - **Module**: ES Modules (`"type": "module"`)
 
 ## 📁 Struktur Folder
+
 ```
 umb-esport-bot/
 ├── index.js                    # Entry point
@@ -58,7 +62,10 @@ umb-esport-bot/
     ├── boost/
     ├── help/
     ├── roast/
-    └── event/
+    ├── event/
+    ├── premium/
+    ├── gift/
+    └── history/
 ```
 
 ## ⚙️ Environment Variables
@@ -77,7 +84,7 @@ API_SECRET=your_api_secret_key
 
 | Tabel | Fungsi |
 |---|---|
-| `levels` | XP, level, koin, bank, equip |
+| `levels` | XP, level, koin, bank, equip, premium |
 | `tickets` | Sistem ticket |
 | `badges` | Badge member |
 | `game_stats` | Statistik games |
@@ -86,6 +93,8 @@ API_SECRET=your_api_secret_key
 | `shop_inventory` | Item shop yang dimiliki |
 | `active_boosts` | Boost yang sedang aktif |
 | `events` | Event system |
+| `premium_keys` | Premium redeem keys |
+| `transactions` | Riwayat transaksi koin |
 
 ## 🚀 Cara Setup
 
@@ -153,6 +162,13 @@ node index.js
 |---|---|---|---|---|
 | `/event info` | Lihat event aktif | | `/roast` | Roast member |
 | `/help` | Daftar command | | | |
+
+### ⭐ Premium
+| Command | Fungsi | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Command | Fungsi |
+|---|---|---|---|---|
+| `/premium redeem` | Redeem premium key | | `/premium status` | Cek status premium |
+| `/gift` | Transfer koin ke member | | `/history` | Riwayat transaksi |
+| `/game crash` | Game crash multiplier | | | |
 
 ## 🔗 Links
 
