@@ -58,6 +58,12 @@ export const BADGES = {
     name: "Thunder God",
     desc: "Badge eksklusif dari shop",
   },
+  // Badge premium
+  premium_member: {
+    emoji: "⭐",
+    name: "Premium Member",
+    desc: "Member Premium UMB Esport",
+  },
 };
 
 // Cek dan kasih badge otomatis
@@ -82,13 +88,17 @@ export async function checkBadges(userId, userData) {
   if (!owned.includes("saver") && (userData.bank || 0) >= 5000)
     newBadges.push("saver");
 
+  // Cek badge premium
+  const premiumStatus = await isPremium(userId);
+  if (!owned.includes("premium_member") && premiumStatus)
+    newBadges.push("premium_member");
+
   // Insert badge baru
   if (newBadges.length > 0) {
     await supabase
       .from("badges")
       .insert(newBadges.map((badge_id) => ({ user_id: userId, badge_id })));
   }
-
   return newBadges;
 }
 
