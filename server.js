@@ -247,6 +247,16 @@ app.get("/premium/keys", authMiddleware, async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+app.post("/premium/delete", authMiddleware, async (req, res) => {
+  try {
+    const { key } = req.body;
+    await supabase.from("premium_keys").delete().eq("key", key);
+    res.json({ success: true, message: "Key berhasil dihapus!" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 export function startServer(client, port = 3000) {
   client.once("clientReady", () => {
     const guild = client.guilds.cache.get(process.env.GUILD_ID);
