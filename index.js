@@ -53,6 +53,7 @@ import {
   premiumData,
   handlePremium,
   giveWeeklyPremiumLootbox,
+  checkExpiringPremium,
 } from "./commands/premium/premium.js";
 
 const client = new Client({
@@ -105,6 +106,9 @@ client.once("clientReady", async () => {
     if (now.getDay() === 1 && now.getHours() === 8 && now.getMinutes() === 0) {
       await giveWeeklyInterest(client);
       await giveWeeklyPremiumLootbox();
+    }
+    if (now.getHours() === 9 && now.getMinutes() === 0) {
+      await checkExpiringPremium(client);
     }
   }, 60 * 1000);
 });

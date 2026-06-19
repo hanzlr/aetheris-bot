@@ -224,3 +224,47 @@ export async function giveWeeklyPremiumLootbox() {
     console.error("Error giving weekly premium lootbox:", error);
   }
 }
+
+// Helper: kirim reminder ke member yang premium nya mau habis besok
+export async function checkExpiringPremium(client) {
+  try {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(23, 59, 59, 999);
+
+    const now = new Date();
+
+    const { data: expiringUsers } = await supabase
+      .from("levels")
+      .select("user_id, premium_expires_at")
+      .eq("is_premium", true)
+      .not("premium_expires_at", "is", null)
+      .lte("premium_expires_at", tomorrow.toISOString())
+      .gte("premium_expires_at", now.toISOString());
+
+    if (!expiringUsers || expiringUsers.length === 0) return;
+
+    for (const user of expiringUsers) {
+      try {
+        const discordUser = await client.users.fetch(user.user_id);
+        const expiresAt = new Date(user.premium_expires_at);
+        await discordUser.send(
+          `⚠️ **Premium Kamu Akan Habis!**\n\n` +
+            `Premium kamu akan berakhir pada **${expiresAt.toLocaleDateString("id-ID")} ${expiresAt.toLocaleTimeString("id-ID")}**.\n\n` +
+            `Hubungi admin untuk mendapatkan key baru agar benefit premium kamu tetap aktif! 🎉`,
+        );
+      } catch (error) {
+        console.error(
+          `Gagal kirim reminder ke ${user.user_id}:`,
+          error.message,
+        );
+      }
+    }
+
+    console.log(
+      `✅ Reminder premium dikirim ke ${expiringUsers.length} member!`,
+    );
+  } catch (error) {
+    console.error("Error checking expiring premium:", error);
+  }
+}
