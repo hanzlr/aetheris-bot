@@ -47,6 +47,32 @@ Semua perubahan penting pada project UMB Esport Bot akan didokumentasikan di sin
 
 ---
 
+## [v1.1.0] - 2026
+
+### ✨ Fitur Baru
+- ⭐ **Premium System** — Redeem key via `/premium redeem`, status via `/premium status`
+- 💸 **Gift** — Transfer koin antar member (Premium only)
+- 📊 **Transaction History** — Riwayat transaksi koin via `/history` (Premium only)
+- 🚀 **Game Crash** — Mini game multiplier dengan cashout interaktif (Premium only)
+- 🔔 **Premium Expiry Notification** — DM otomatis H-1 sebelum premium habis
+- 🎁 **Weekly Premium Loot Box** — Rare box otomatis setiap Senin untuk member premium
+
+### 🌐 Web Dashboard
+- 🔑 Generate & hapus premium key
+- 🔍 Search/filter member di leaderboard
+
+### 🛡️ Improvement
+- Rate limiting API (30 request/menit per IP)
+- Cap multiplier XP & koin maksimal 3x (mencegah stacking event + boost + premium)
+- Transaction logging lengkap di semua sumber koin (daily, games, fishing)
+
+### 🗄️ Database
+- Tabel `premium_keys` — Premium redeem keys
+- Tabel `transactions` — Riwayat transaksi koin
+- Kolom `is_premium` & `premium_expires_at` di tabel `levels`
+
+---
+
 ## [Upcoming]
 
 ### ⏳ Fitur Yang Direncanakan
