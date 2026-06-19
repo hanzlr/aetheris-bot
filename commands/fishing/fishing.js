@@ -2,6 +2,7 @@ import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import supabase from "../../database/supabase.js";
 import { PANCING_LIST, UMPAN_LIST } from "../equip/equip.js";
 import { isPremium } from "../premium/premium.js";
+import { logTransaction } from "../history/history.js";
 
 // Daftar semua ikan
 export const FISH_LIST = {
@@ -360,6 +361,12 @@ export async function handleFishing(interaction) {
         .eq("user_id", user.id)
         .eq("fish_id", fishChoice);
 
+      await logTransaction(
+        user.id,
+        totalPrice,
+        `Jual ikan ${fish.name} x${fishData.quantity}`,
+      );
+
       const embed = new EmbedBuilder()
         .setTitle("💰 Ikan Terjual!")
         .addFields(
@@ -422,6 +429,8 @@ export async function handleFishing(interaction) {
         .eq("user_id", user.id);
 
       await supabase.from("fish_inventory").delete().eq("user_id", user.id);
+
+      await logTransaction(user.id, totalCoins, "Jual semua ikan");
 
       const embed = new EmbedBuilder()
         .setTitle("💰 Semua Ikan Terjual!")

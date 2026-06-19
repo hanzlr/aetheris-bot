@@ -1,6 +1,7 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import supabase from "../../database/supabase.js";
 import { isPremium } from "../premium/premium.js";
+import { logTransaction } from "../history/history.js";
 
 async function getActiveEvent() {
   try {
@@ -91,6 +92,8 @@ export async function handleEconomy(interaction) {
       .from("levels")
       .update({ coins: newCoins, last_daily: now.toISOString() })
       .eq("user_id", user.id);
+
+    await logTransaction(user.id, coinsGained, "Daily Reward");
 
     const embed = new EmbedBuilder()
       .setTitle("🎁 Daily Reward!")

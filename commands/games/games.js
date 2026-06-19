@@ -7,6 +7,7 @@ import {
 } from "discord.js";
 import supabase from "../../database/supabase.js";
 import { handleCrash, handleCrashButton } from "./crash.js";
+import { logTransaction } from "../history/history.js";
 
 const activeGames = new Map();
 
@@ -181,6 +182,11 @@ async function handleDice(interaction) {
 
   await updateCoins(user.id, newCoins);
   await saveGameStat(user.id, "dice", gameResult, newCoins - (data.coins || 0));
+  await logTransaction(
+    user.id,
+    newCoins - (data.coins || 0),
+    `Game Dice — ${gameResult}`,
+  );
 
   const embed = new EmbedBuilder()
     .setTitle("🎲 Dice Roll!")
@@ -231,6 +237,12 @@ async function handleCoinflip(interaction) {
     "coinflip",
     menang ? "win" : "loss",
     newCoins - (data.coins || 0),
+  );
+
+  await logTransaction(
+    user.id,
+    newCoins - (data.coins || 0),
+    `Game Coinflip — ${menang ? "win" : "loss"}`,
   );
 
   const embed = new EmbedBuilder()
@@ -315,6 +327,11 @@ async function handleSlot(interaction) {
 
   await updateCoins(user.id, newCoins);
   await saveGameStat(user.id, "slot", gameResult, newCoins - (data.coins || 0));
+  await logTransaction(
+    user.id,
+    newCoins - (data.coins || 0),
+    `Game Slot — ${gameResult}`,
+  );
 
   const embed = new EmbedBuilder()
     .setTitle("🎰 Slot Machine!")
@@ -330,23 +347,21 @@ async function handleSlot(interaction) {
 }
 
 function buildBlackjackEmbed(playerCards, botCards, playerTotal, status) {
-  const embed = new EmbedBuilder()
-    .setTitle("🃏 Blackjack!")
-    .addFields(
-      {
-        name: "🃏 Kartu Kamu",
-        value: `${playerCards.join(" ")} = **${playerTotal}**`,
-        inline: true,
-      },
-      {
-        name: "🤖 Kartu Bot",
-        value:
-          status === "playing"
-            ? `${botCards[0]} + ❓`
-            : `${botCards.join(" ")} = **${totalCards(botCards)}**`,
-        inline: true,
-      },
-    );
+  const embed = new EmbedBuilder().setTitle("🃏 Blackjack!").addFields(
+    {
+      name: "🃏 Kartu Kamu",
+      value: `${playerCards.join(" ")} = **${playerTotal}**`,
+      inline: true,
+    },
+    {
+      name: "🤖 Kartu Bot",
+      value:
+        status === "playing"
+          ? `${botCards[0]} + ❓`
+          : `${botCards.join(" ")} = **${totalCards(botCards)}**`,
+      inline: true,
+    },
+  );
 
   if (status === "playing") {
     embed.setDescription("Pilih aksi kamu:");
@@ -419,6 +434,7 @@ async function handleBlackjack(interaction) {
     const newCoins = (data.coins || 0) + taruhan;
     await updateCoins(user.id, newCoins);
     await saveGameStat(user.id, "blackjack", "win", taruhan);
+    await logTransaction(user.id, taruhan, "Game Blackjack — win (natural)");
     embed.setDescription("🎉 BLACKJACK! Kamu menang!");
     embed.addFields({ name: "💳 Koin Sekarang", value: `${newCoins} koin` });
     embed.setColor(0xffd700);
@@ -449,6 +465,7 @@ export async function handleBlackjackButton(interaction) {
       const newCoins = coins - taruhan;
       await updateCoins(user.id, newCoins);
       await saveGameStat(user.id, "blackjack", "loss", -taruhan);
+      await logTransaction(user.id, -taruhan, "Game Blackjack — bust");
 
       const embed = buildBlackjackEmbed(
         playerCards,
@@ -528,6 +545,11 @@ async function resolveStand(interaction, game, playerCards) {
   activeGames.delete(user.id);
   await updateCoins(user.id, newCoins);
   await saveGameStat(user.id, "blackjack", gameResult, newCoins - coins);
+  await logTransaction(
+    user.id,
+    newCoins - coins,
+    `Game Blackjack — ${gameResult}`,
+  );
 
   const embed = buildBlackjackEmbed(playerCards, botCards, playerTotal, "end");
   embed.addFields(
