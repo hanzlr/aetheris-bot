@@ -60,22 +60,30 @@ export async function handleEconomy(interaction) {
       }
     }
 
-    // Cek event double coins
+    // Cek event double coins, boost, dan premium — dengan cap maksimal 3x
     const event = await getActiveEvent();
-    let coinsGained = Math.floor(Math.random() * 151) + 100;
+    const userIsPremium = await isPremium(user.id);
+
+    const baseCoinsGained = userIsPremium
+      ? Math.floor(Math.random() * 201) + 300
+      : Math.floor(Math.random() * 151) + 100;
+
+    let coinsMultiplier = 1;
     let eventText = "";
 
     if (event?.event_type === "double_coins") {
-      coinsGained *= event.multiplier || 2;
+      coinsMultiplier *= event.multiplier || 2;
       eventText = `\n💰 **Double Coins Event Aktif! x${event.multiplier || 2}**`;
     }
 
-    // Cek premium
-    const userIsPremium = await isPremium(user.id);
     if (userIsPremium) {
-      coinsGained = Math.floor(Math.random() * 201) + 300;
-      eventText += "\n⭐ **Premium Bonus! Daily 2x lebih banyak**";
+      eventText += "\n⭐ **Premium Bonus! Daily lebih banyak**";
     }
+
+    // Cap maksimal 3x biar gak terlalu OP
+    coinsMultiplier = Math.min(coinsMultiplier, 3);
+
+    const coinsGained = Math.floor(baseCoinsGained * coinsMultiplier);
 
     const newCoins = (data.coins || 0) + coinsGained;
 

@@ -34,18 +34,23 @@ export async function handleXP(message) {
   if (now - lastXP < 60 * 1000) return;
   xpCooldown.set(userId, now);
 
-  // Cek event double XP & boost
+  // Cek event double XP, boost, dan premium — dengan cap maksimal 3x
+  const baseXpGain = Math.floor(Math.random() * 11) + 15;
+  let xpMultiplier = 1;
+
   const event = await getActiveEvent();
-  let xpGain = Math.floor(Math.random() * 11) + 15;
-  if (event?.event_type === "double_xp") xpGain *= event.multiplier || 2;
+  if (event?.event_type === "double_xp") xpMultiplier *= event.multiplier || 2;
 
-  // Cek XP boost personal
   const xpBoost = await getActiveBoost(userId, "xp_boost");
-  if (xpBoost) xpGain *= 2;
+  if (xpBoost) xpMultiplier *= 2;
 
-  // Cek premium XP bonus
   const userIsPremium = await isPremium(userId);
-  if (userIsPremium) xpGain = Math.floor(xpGain * 1.5);
+  if (userIsPremium) xpMultiplier *= 1.5;
+
+  // Cap maksimal 3x biar gak terlalu OP kalau semua aktif bareng
+  xpMultiplier = Math.min(xpMultiplier, 3);
+
+  let xpGain = Math.floor(baseXpGain * xpMultiplier);
 
   const { data } = await supabase
     .from("levels")
