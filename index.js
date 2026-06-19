@@ -47,9 +47,13 @@ import { eventData, handleEvent } from "./commands/event/event.js";
 import { startServer } from "./server.js";
 import { boostData, handleBoost } from "./commands/boost/boost.js";
 
-import { premiumData, handlePremium } from "./commands/premium/premium.js";
 import { giftData, handleGift } from "./commands/gift/gift.js";
 import { historyData, handleHistory } from "./commands/history/history.js";
+import {
+  premiumData,
+  handlePremium,
+  giveWeeklyPremiumLootbox,
+} from "./commands/premium/premium.js";
 
 const client = new Client({
   intents: [
@@ -100,6 +104,7 @@ client.once("clientReady", async () => {
     const now = new Date();
     if (now.getDay() === 1 && now.getHours() === 8 && now.getMinutes() === 0) {
       await giveWeeklyInterest(client);
+      await giveWeeklyPremiumLootbox();
     }
   }, 60 * 1000);
 });
