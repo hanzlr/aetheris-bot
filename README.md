@@ -41,7 +41,7 @@ Bot Discord resmi untuk komunitas. Dibangun dengan Node.js dan Discord.js v14.
 ## 📁 Struktur Folder
 
 ```
-umb-esport-bot/
+aetheris-bot/
 ├── index.js                    # Entry point
 ├── server.js                   # Express API server
 ├── database/
@@ -100,8 +100,8 @@ API_SECRET=your_api_secret_key
 
 1. Clone repository
 ```bash
-git clone https://github.com/hanzlr/umb-esport-bot.git
-cd umb-esport-bot
+git clone https://github.com/hanzlr/aetheris-bot.git
+cd aetheris-bot
 ```
 
 2. Install dependencies
@@ -173,7 +173,7 @@ node index.js
 ## 🔗 Links
 
 - **Dashboard**: https://dashboardbot-nine.vercel.app
-- **API**: https://umb-esport-bot-production-abed.up.railway.app
+- **API**: https://aetheris-bot-production.up.railway.app
 
 ## 📋 Changelog
 
@@ -181,4 +181,4 @@ Lihat semua perubahan di [CHANGELOG.md](CHANGELOG.md)
 
 ## 👤 Developer
 
-Dibuat oleh **hanzlr** dari **NEXALAB** untuk UMB Esport
+Dibuat oleh **hanzlr** dari **NEXALAB**
