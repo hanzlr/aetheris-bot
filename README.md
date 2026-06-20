@@ -1,3 +1,7 @@
+<p align="center">
+     <img src="./assets/aetheris-banner.png" alt="Aetheris Bot Banner" width="100%">
+</p>
+   
 # 🎮 Aetheris Bot
 
 ![Node.js](https://img.shields.io/badge/Node.js-v20-green)
