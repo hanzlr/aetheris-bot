@@ -1,7 +1,7 @@
 <p align="center">
      <img src="./assets/aetheris-banner.png" alt="Aetheris Bot Banner" width="100%">
 </p>
-   
+
 # 🎮 Aetheris Bot
 
 ![Node.js](https://img.shields.io/badge/Node.js-v20-green)
@@ -11,28 +11,28 @@
 ![Supabase](https://img.shields.io/badge/Database-Supabase-3ECF8E)
 ![Vercel](https://img.shields.io/badge/Dashboard-Vercel-black)
 
-Bot Discord resmi untuk komunitas. Dibangun dengan Node.js dan Discord.js v14.
+The official Discord bot for the community. Built with Node.js and Discord.js v14.
 
-## ✨ Fitur
+## ✨ Features
 
-- 🎫 **Ticket System** — Buat dan kelola ticket support
-- ⭐ **Leveling & XP** — Sistem level dari aktivitas chat
-- 💰 **Ekonomi** — Daily reward, wallet, dan bank
+- 🎫 **Ticket System** — Create and manage support tickets
+- ⭐ **Leveling & XP** — Leveling system from chat activity
+- 💰 **Economy** — Daily reward, wallet, and bank
 - 🎮 **Mini Games** — Dice, Coinflip, Slot, Blackjack, Crash (Premium)
-- 🎣 **Fishing** — Mancing ikan dengan berbagai rarity
-- 🏪 **Shop** — Beli item, pancing, umpan, dan badge eksklusif
-- 🎒 **Inventory** — Lihat semua item yang dimiliki
-- 🎁 **Loot Box** — Common, Rare, dan Legendary box
+- 🎣 **Fishing** — Catch fish with various rarities
+- 🏪 **Shop** — Buy items, fishing rods, bait, and exclusive badges
+- 🎒 **Inventory** — View all owned items
+- 🎁 **Loot Box** — Common, Rare, and Legendary boxes
 - ⚡ **Boost System** — XP Boost, Coin Boost, Lucky Charm
-- 🏅 **Badge System** — Badge dari aktivitas, shop, dan premium
-- 📊 **Statistik** — Statistik lengkap per member & server
-- 🎮 **Profile Card** — Profil lengkap member
-- 🔥 **Roast Me** — Roast member dengan sarkas
+- 🏅 **Badge System** — Badges from activity, shop, and premium
+- 📊 **Statistics** — Full stats per member & server
+- 🎮 **Profile Card** — Complete member profile
+- 🔥 **Roast Me** — Roast a member with sarcasm
 - 🎉 **Event System** — Double XP, Double Coins, Fishing Frenzy, Loot Rain
-- ⭐ **Premium System** — Benefit eksklusif via redeem key
-- 💸 **Gift** — Transfer koin antar member (Premium)
-- 📊 **Transaction History** — Riwayat transaksi koin (Premium)
-- 📋 **Help Command** — Daftar semua command
+- ⭐ **Premium System** — Exclusive benefits via redeem key
+- 💸 **Gift** — Transfer coins between members (Premium)
+- 📊 **Transaction History** — Coin transaction history (Premium)
+- 📋 **Help Command** — List of all commands
 
 ## 🛠️ Tech Stack
 
@@ -42,7 +42,7 @@ Bot Discord resmi untuk komunitas. Dibangun dengan Node.js dan Discord.js v14.
 - **Hosting**: Railway
 - **Module**: ES Modules (`"type": "module"`)
 
-## 📁 Struktur Folder
+## 📁 Folder Structure
 
 ```
 aetheris-bot/
@@ -51,30 +51,30 @@ aetheris-bot/
 ├── database/
 │   └── supabase.js             # Supabase client
 └── commands/
-    ├── ticket/
-    ├── leveling/
-    ├── currency/
-    ├── bank/
-    ├── games/
-    ├── profile/
-    ├── stats/
-    ├── lootbox/
-    ├── inventory/
-    ├── fishing/
-    ├── shop/
-    ├── equip/
-    ├── boost/
-    ├── help/
-    ├── roast/
-    ├── event/
-    ├── premium/
-    ├── gift/
-    └── history/
+├── ticket/
+├── leveling/
+├── currency/
+├── bank/
+├── games/
+├── profile/
+├── stats/
+├── lootbox/
+├── inventory/
+├── fishing/
+├── shop/
+├── equip/
+├── boost/
+├── help/
+├── roast/
+├── event/
+├── premium/
+├── gift/
+└── history/
 ```
 
 ## ⚙️ Environment Variables
 
-Buat file `.env` di root folder:
+Create a `.env` file in the root folder:
 
 ```env
 DISCORD_TOKEN=your_discord_bot_token
@@ -86,23 +86,23 @@ API_SECRET=your_api_secret_key
 
 ## 🗄️ Database Tables
 
-| Tabel | Fungsi |
+| Table | Purpose |
 |---|---|
-| `levels` | XP, level, koin, bank, equip, premium |
-| `tickets` | Sistem ticket |
-| `badges` | Badge member |
-| `game_stats` | Statistik games |
-| `fish_inventory` | Ikan yang dimiliki |
+| `levels` | XP, level, coins, bank, equip, premium |
+| `tickets` | Ticket system |
+| `badges` | Member badges |
+| `game_stats` | Game statistics |
+| `fish_inventory` | Owned fish |
 | `lootboxes` | Loot box inventory |
-| `shop_inventory` | Item shop yang dimiliki |
-| `active_boosts` | Boost yang sedang aktif |
+| `shop_inventory` | Owned shop items |
+| `active_boosts` | Currently active boosts |
 | `events` | Event system |
 | `premium_keys` | Premium redeem keys |
-| `transactions` | Riwayat transaksi koin |
+| `transactions` | Coin transaction history |
 
-## 🚀 Cara Setup
+## 🚀 Setup
 
-1. Clone repository
+1. Clone the repository
 ```bash
 git clone https://github.com/hanzlr/aetheris-bot.git
 cd aetheris-bot
@@ -113,9 +113,9 @@ cd aetheris-bot
 npm install
 ```
 
-3. Buat file `.env` dan isi dengan environment variables
+3. Create a `.env` file and fill in the environment variables
 
-4. Jalankan bot
+4. Run the bot
 ```bash
 node index.js
 ```
@@ -123,56 +123,56 @@ node index.js
 ## 📋 Slash Commands
 
 ### 🎫 Ticket
-| Command | Fungsi |
+| Command | Purpose |
 |---|---|
-| `/ticket` | Buat panel ticket |
+| `/ticket` | Create a ticket panel |
 
-### ⭐ Leveling & Ekonomi
-| Command | Fungsi | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Command | Fungsi |
+### ⭐ Leveling & Economy
+| Command | Purpose | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Command | Purpose |
 |---|---|---|---|---|
-| `/level rank` | Lihat rank & XP | | `/economy daily` | Claim koin harian |
-| `/level leaderboard` | Leaderboard server | | `/economy balance` | Cek saldo |
-| `/bank deposit` | Simpan koin ke bank | | `/bank withdraw` | Ambil koin dari bank |
+| `/level rank` | View your rank & XP | | `/economy daily` | Claim daily coins |
+| `/level leaderboard` | Server leaderboard | | `/economy balance` | Check your balance |
+| `/bank deposit` | Deposit coins to bank | | `/bank withdraw` | Withdraw coins from bank |
 
 ### 🎮 Games
-| Command | Fungsi | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Command | Fungsi |
+| Command | Purpose | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Command | Purpose |
 |---|---|---|---|---|
-| `/game dice` | Main dadu | | `/game coinflip` | Main koin |
-| `/game slot` | Main slot | | `/game blackjack` | Main blackjack |
+| `/game dice` | Play dice | | `/game coinflip` | Play coinflip |
+| `/game slot` | Play slot | | `/game blackjack` | Play blackjack |
 
 ### 🎣 Fishing & Equip
-| Command | Fungsi | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Command | Fungsi |
+| Command | Purpose | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Command | Purpose |
 |---|---|---|---|---|
-| `/fish cast` | Mancing ikan | | `/fish sell` | Jual ikan |
-| `/equip pancing` | Ganti pancing | | `/equip umpan` | Ganti umpan |
-| `/equip info` | Lihat equip aktif | | | |
+| `/fish cast` | Cast a fishing line | | `/fish sell` | Sell fish |
+| `/equip pancing` | Change fishing rod | | `/equip umpan` | Change bait |
+| `/equip info` | View active equipment | | | |
 
 ### 🏪 Shop & Inventory
-| Command | Fungsi | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Command | Fungsi |
+| Command | Purpose | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Command | Purpose |
 |---|---|---|---|---|
-| `/shop view` | Lihat shop | | `/shop buy` | Beli item |
-| `/lootbox buy` | Beli loot box | | `/lootbox open` | Buka loot box |
-| `/boost use` | Aktifkan boost | | `/boost info` | Lihat boost aktif |
-| `/inventory` | Lihat inventory | | | |
+| `/shop view` | View shop | | `/shop buy` | Buy an item |
+| `/lootbox buy` | Buy a loot box | | `/lootbox open` | Open a loot box |
+| `/boost use` | Activate a boost | | `/boost info` | View active boosts |
+| `/inventory` | View inventory | | | |
 
-### 🎒 Profil & Statistik
-| Command | Fungsi | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Command | Fungsi |
+### 🎒 Profile & Statistics
+| Command | Purpose | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Command | Purpose |
 |---|---|---|---|---|
-| `/profile view` | Lihat profil | | `/profile badges` | Lihat badge |
-| `/stats view` | Lihat statistik | | `/stats server` | Statistik server |
+| `/profile view` | View profile | | `/profile badges` | View badges |
+| `/stats view` | View statistics | | `/stats server` | Server statistics |
 
-### 🎉 Event & Lainnya
-| Command | Fungsi | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Command | Fungsi |
+### 🎉 Event & Others
+| Command | Purpose | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Command | Purpose |
 |---|---|---|---|---|
-| `/event info` | Lihat event aktif | | `/roast` | Roast member |
-| `/help` | Daftar command | | | |
+| `/event info` | View active event | | `/roast` | Roast a member |
+| `/help` | List of commands | | | |
 
 ### ⭐ Premium
-| Command | Fungsi | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Command | Fungsi |
+| Command | Purpose | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Command | Purpose |
 |---|---|---|---|---|
-| `/premium redeem` | Redeem premium key | | `/premium status` | Cek status premium |
-| `/gift` | Transfer koin ke member | | `/history` | Riwayat transaksi |
-| `/game crash` | Game crash multiplier | | | |
+| `/premium redeem` | Redeem a premium key | | `/premium status` | Check premium status |
+| `/gift` | Transfer coins to a member | | `/history` | Transaction history |
+| `/game crash` | Crash multiplier game | | | |
 
 ## 🔗 Links
 
@@ -180,11 +180,10 @@ node index.js
 - **API**: https://aetheris-bot-production.up.railway.app
 - **Landing Page**: https://aetheris.nexalab.my.id
 
-
 ## 📋 Changelog
 
-Lihat semua perubahan di [CHANGELOG.md](CHANGELOG.md)
+See all changes in [CHANGELOG.md](CHANGELOG.md)
 
 ## 👤 Developer
 
-Dibuat oleh **hanzlr** dari **NEXALAB**
+Built by **hanzlr** from **NEXALAB**
