@@ -1,4 +1,4 @@
-# 🎮 UMB Esport Bot
+# 🎮 Aetheris Bot
 
 ![Node.js](https://img.shields.io/badge/Node.js-v20-green)
 ![Discord.js](https://img.shields.io/badge/Discord.js-v14-blue)
@@ -7,7 +7,7 @@
 ![Supabase](https://img.shields.io/badge/Database-Supabase-3ECF8E)
 ![Vercel](https://img.shields.io/badge/Dashboard-Vercel-black)
 
-Bot Discord resmi untuk komunitas UMB Esport. Dibangun dengan Node.js dan Discord.js v14.
+Bot Discord resmi untuk komunitas. Dibangun dengan Node.js dan Discord.js v14.
 
 ## ✨ Fitur
 
