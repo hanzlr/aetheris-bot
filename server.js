@@ -14,7 +14,10 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-const SECRET_KEY = process.env.API_SECRET || "umb-esport-secret-key";
+const SECRET_KEY = process.env.API_SECRET;
+if (!SECRET_KEY) {
+  throw new Error("API_SECRET environment variable wajib di-set!");
+}
 
 function authMiddleware(req, res, next) {
   const key = req.headers["x-api-key"];
