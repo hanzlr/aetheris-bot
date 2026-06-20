@@ -232,8 +232,8 @@ app.post("/premium/generate", authMiddleware, async (req, res) => {
     // Generate random key
     const randomPart = () =>
       Math.random().toString(36).substring(2, 6).toUpperCase();
-    // const key = `NEXALAB-${randomPart()}-${randomPart()}-${randomPart()}`;
-    const key = `${randomPart()}-${randomPart()}-${randomPart()}-${randomPart()}`;
+    const key = `AETHERIS-${randomPart()}-${randomPart()}-${randomPart()}`;
+    // const key = `${randomPart()}-${randomPart()}-${randomPart()}-${randomPart()}`;
 
     await supabase
       .from("premium_keys")
