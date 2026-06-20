@@ -24,7 +24,7 @@ function authMiddleware(req, res, next) {
 }
 
 app.get("/health", (req, res) => {
-  res.json({ status: "ok", message: "UMB Esport Bot API is running!" });
+  res.json({ status: "ok", message: "Aetheris Bot API is running!" });
 });
 
 app.get("/channels", authMiddleware, async (req, res) => {
@@ -62,7 +62,7 @@ app.post("/announce", authMiddleware, async (req, res) => {
     if (mention === "everyone") mentionText = "@everyone\n";
     if (mention === "here") mentionText = "@here\n";
     await channel.send(
-      `${mentionText}📢 **PENGUMUMAN**\n\n${message}\n\n— *Admin UMB Esport*`,
+      `${mentionText}📢 **PENGUMUMAN**\n\n${message}\n\n— *Admin Aetheris*`,
     );
     res.json({ success: true, message: "Announcement berhasil dikirim!" });
   } catch (error) {
@@ -79,7 +79,7 @@ app.post("/givebox", authMiddleware, async (req, res) => {
     const guild = req.app.get("guild");
     const member = await guild.members.fetch(userId);
     await member.send(
-      `🎁 Kamu mendapat **${boxType} box** dari Admin UMB Esport! Buka dengan \`/lootbox open ${boxType}\``,
+      `🎁 Kamu mendapat **${boxType} box** dari Admin Aetheris! Buka dengan \`/lootbox open ${boxType}\``,
     );
     res.json({ success: true, message: `${boxType} box berhasil dikirim!` });
   } catch (error) {
@@ -169,7 +169,7 @@ app.post("/event/start", authMiddleware, async (req, res) => {
           `@everyone\n🎉 **EVENT DIMULAI!**\n\n` +
             `**${eventLabels[eventType]}** sekarang aktif!\n` +
             `⏰ Berakhir dalam **${durationHours} jam**\n\n` +
-            `— *Admin UMB Esport*`,
+            `— *Admin Aetheris*`,
         );
       }
     }
@@ -209,7 +209,7 @@ app.post("/event/stop", authMiddleware, async (req, res) => {
       const channel = guild.channels.cache.get(channelId);
       if (channel) {
         await channel.send(
-          `⚠️ **EVENT TELAH BERAKHIR!**\n\n— *Admin UMB Esport*`,
+          `⚠️ **EVENT TELAH BERAKHIR!**\n\n— *Admin Aetheris*`,
         );
       }
     }

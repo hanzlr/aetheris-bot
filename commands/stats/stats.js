@@ -128,7 +128,7 @@ export async function handleStats(interaction) {
       .select('*', { count: 'exact', head: true })
 
     const embed = new EmbedBuilder()
-      .setTitle('📊 Statistik UMB Esport Server')
+      .setTitle('📊 Statistik Aetheris Server')
       .addFields(
         { name: '👥 Total Member', value: `${totalMembers || 0} member`, inline: true },
         { name: '🏆 Member Teraktif', value: topMember ? `${topMember.username} (${topMember.total_messages} pesan)` : 'Belum ada', inline: true },

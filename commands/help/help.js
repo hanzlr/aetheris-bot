@@ -159,7 +159,7 @@ export async function handleHelp(interaction) {
       .setTitle(`${cat.label} — Command List`)
       .setDescription(commandList)
       .setColor(0x5865f2)
-      .setFooter({ text: "UMB Esport Bot • /help untuk semua kategori" })
+      .setFooter({ text: "Aetheris Bot • /help untuk semua kategori" })
       .setTimestamp();
 
     return interaction.reply({ embeds: [embed] });
@@ -167,7 +167,7 @@ export async function handleHelp(interaction) {
 
   // Tampilkan semua kategori
   const embed = new EmbedBuilder()
-    .setTitle("📋 UMB Esport Bot — Command List")
+    .setTitle("📋 Aetheris Bot — Command List")
     .setDescription(
       "Gunakan `/help [kategori]` untuk detail command per kategori!",
     )
@@ -187,7 +187,7 @@ export async function handleHelp(interaction) {
   }
 
   embed.setFooter({
-    text: "UMB Esport Bot • Ketik /help [kategori] untuk detail!",
+    text: "Aetheris Bot • Ketik /help [kategori] untuk detail!",
   });
 
   return interaction.reply({ embeds: [embed] });

@@ -173,7 +173,7 @@ export async function handleLevel(interaction) {
       .join("\n");
 
     const embed = new EmbedBuilder()
-      .setTitle("🏆 Leaderboard UMB Esport")
+      .setTitle("🏆 Leaderboard Aetheris")
       .setDescription(list)
       .setColor(0xffd700)
       .setTimestamp();

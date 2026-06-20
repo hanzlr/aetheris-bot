@@ -16,7 +16,7 @@ export const data = new SlashCommandBuilder()
 
 export async function sendTicketPanel(channel) {
   const embed = new EmbedBuilder()
-    .setTitle('🎫 UMB Esport Support')
+    .setTitle('🎫 Aetheris Support')
     .setDescription('Klik tombol di bawah untuk membuka ticket!')
     .setColor(0x5865F2)
 
@@ -82,7 +82,7 @@ export async function handleTicket(interaction) {
 
   const ticketEmbed = new EmbedBuilder()
     .setTitle('🎫 Ticket Dibuka!')
-    .setDescription(`Halo ${user}! Tim admin UMB Esport akan segera membantu kamu.\n\nJelaskan keperluanmu di sini.`)
+    .setDescription(`Halo ${user}! Tim admin Aetheris akan segera membantu kamu.\n\nJelaskan keperluanmu di sini.`)
     .setColor(0x57F287)
     .setTimestamp()
 

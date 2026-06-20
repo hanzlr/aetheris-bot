@@ -188,7 +188,7 @@ export async function handleInventory(interaction) {
       },
     )
     .setColor(userIsPremium ? 0xffd700 : 0x5865f2)
-    .setFooter({ text: "UMB Esport • Inventory" })
+    .setFooter({ text: "Aetheris • Inventory" })
     .setTimestamp();
 
   interaction.reply({ embeds: [embed] });

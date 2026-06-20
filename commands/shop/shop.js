@@ -174,7 +174,7 @@ export const SHOP_ITEMS = {
 // ============================================================
 export const shopData = new SlashCommandBuilder()
   .setName('shop')
-  .setDescription('Toko item UMB Esport')
+  .setDescription('Toko item Aetheris!')
   .addSubcommand(sub =>
     sub.setName('view')
       .setDescription('Lihat semua item di shop')
@@ -235,7 +235,7 @@ export async function handleShop(interaction) {
     const kategori = interaction.options.getString('kategori')
 
     const embed = new EmbedBuilder()
-      .setTitle('🏪 UMB Esport Shop')
+      .setTitle('🏪 Aetheris Shop')
       .setColor(0x5865F2)
       .setFooter({ text: 'Gunakan /shop buy untuk membeli item!' })
       .setTimestamp()

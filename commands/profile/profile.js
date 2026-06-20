@@ -62,7 +62,7 @@ export const BADGES = {
   premium_member: {
     emoji: "⭐",
     name: "Premium Member",
-    desc: "Member Premium UMB Esport",
+    desc: "Member Premium Aetheris",
   },
 };
 
@@ -172,7 +172,7 @@ export async function handleProfile(interaction) {
         { name: "🏅 Badges", value: badgeEmojis, inline: false },
       )
       .setColor(0x5865f2)
-      .setFooter({ text: `UMB Esport • Member sejak bergabung` })
+      .setFooter({ text: `Aetheris • Member sejak bergabung` })
       .setTimestamp();
 
     if (newBadges.length > 0) {
