@@ -178,6 +178,8 @@ node index.js
 
 - **Dashboard**: https://dashboardbot-nine.vercel.app
 - **API**: https://aetheris-bot-production.up.railway.app
+- **Landing Page**: https://aetheris.nexalab.my.id
+
 
 ## 📋 Changelog
 
