@@ -1,6 +1,6 @@
 # 📋 Changelog
 
-Semua perubahan penting pada project UMB Esport Bot akan didokumentasikan di sini.
+Semua perubahan penting pada project Aetheris Bot akan didokumentasikan di sini.
 
 ---
 
@@ -82,4 +82,4 @@ Semua perubahan penting pada project UMB Esport Bot akan didokumentasikan di sin
 
 ---
 
-*Dibuat oleh **Hanz** dari **NEXALAB** untuk UMB Esport*
+*Dibuat oleh **Hanz** dari **NEXALAB***
