@@ -50,6 +50,7 @@ aetheris-bot/
 ├── server.js                   # Express API server
 ├── database/
 │   └── supabase.js             # Supabase client
+│   └── schema.sql              # Database schema
 └── commands/
 ├── ticket/
 ├── leveling/
@@ -99,6 +100,8 @@ API_SECRET=your_api_secret_key
 | `events` | Event system |
 | `premium_keys` | Premium redeem keys |
 | `transactions` | Coin transaction history |
+
+> 📄 Full schema available in [`database/schema.sql`](database/schema.sql)
 
 ## 🚀 Setup
 
