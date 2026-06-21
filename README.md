@@ -187,6 +187,12 @@ node index.js
 
 See all changes in [CHANGELOG.md](CHANGELOG.md)
 
+## 📚 Documentation
+
+- [Command Reference](docs/COMMANDS.md)
+- [API Documentation](docs/API.md)
+- [Deployment Guide](docs/DEPLOYMENT.md)
+
 ## 👤 Developer
 
 Built by **hanzlr** from **NEXALAB**
