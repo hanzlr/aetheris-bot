@@ -101,7 +101,7 @@ API_SECRET=your_api_secret_key
 | `premium_keys` | Premium redeem keys |
 | `transactions` | Coin transaction history |
 
-> 📄 Full schema available in [`database/schema.sql`](database/schema.sql)
+> 📄 Full schema: [`database/SCHEMA.md`](database/SCHEMA.md) (readable) · [`database/schema.sql`](database/schema.sql) (raw SQL)
 
 ## 🚀 Setup
 
