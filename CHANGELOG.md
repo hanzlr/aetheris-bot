@@ -3,7 +3,7 @@
 All notable changes to the Aetheris Bot project will be documented here.
 
 ---
-## [v1.1.1] - 2026
+## [v1.1.1] - June 2026
 ### 🔒 Security
 - Patched `undici` dependency vulnerabilities (HTTP header injection via Set-Cookie, WebSocket DoS, Set-Cookie SameSite downgrade, HTTP response queue poisoning) via package override
 ### 📚 Docs
@@ -11,7 +11,7 @@ All notable changes to the Aetheris Bot project will be documented here.
 
 ---
 
-## [v1.1.0] - 2026
+## [v1.1.0] - June 2026
 
 ### ✨ New Features
 - ⭐ **Premium System** — Redeem a key via `/premium redeem`, check status via `/premium status`
@@ -37,7 +37,7 @@ All notable changes to the Aetheris Bot project will be documented here.
 
 ---
 
-## [v1.0.0] - 2026
+## [v1.0.0] - June 2026
 
 ### 🎉 Initial Release
 
