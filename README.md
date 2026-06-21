@@ -49,7 +49,7 @@ aetheris-bot/
 ├── index.js                    # Entry point
 ├── server.js                   # Express API server
 ├── database/
-│   └── supabase.js             # Supabase client
+│   ├── supabase.js             # Supabase client
 │   └── schema.sql              # Database schema
 └── commands/
 ├── ticket/
@@ -75,15 +75,15 @@ aetheris-bot/
 
 ## ⚙️ Environment Variables
 
-Create a `.env` file in the root folder:
+Copy `.env.example` to `.env` and fill in the values:
 
-```env
-DISCORD_TOKEN=your_discord_bot_token
-SUPABASE_URL=your_supabase_url
-SUPABASE_KEY=your_supabase_anon_key
-GUILD_ID=your_discord_server_id
-API_SECRET=your_api_secret_key
-```
+| Variable | Description |
+|---|---|
+| `DISCORD_TOKEN` | Discord bot token (from Discord Developer Portal) |
+| `GUILD_ID` | Discord server (guild) ID |
+| `SUPABASE_URL` | Supabase project URL |
+| `SUPABASE_KEY` | Supabase API key |
+| `API_SECRET` | Secret key for internal API requests |
 
 ## 🗄️ Database Tables
 
@@ -116,7 +116,7 @@ cd aetheris-bot
 npm install
 ```
 
-3. Create a `.env` file and fill in the environment variables
+3. Copy `.env.example` to `.env` and fill in the values
 
 4. Run the bot
 ```bash
