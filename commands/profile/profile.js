@@ -172,8 +172,7 @@ export async function handleProfile(interaction) {
         { name: "🏅 Badges", value: badgeEmojis, inline: false },
       )
       .setColor(0x5865f2)
-      .setFooter({ text: `Aetheris • Member sejak bergabung` })
-      .setTimestamp();
+      .setFooter({ text: `Aetheris` });
 
     if (newBadges.length > 0) {
       const newBadgeText = newBadges
