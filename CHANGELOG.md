@@ -3,6 +3,13 @@
 All notable changes to the Aetheris Bot project will be documented here.
 
 ---
+## [v1.1.1] - 2026
+### 🔒 Security
+- Patched `undici` dependency vulnerabilities (HTTP header injection via Set-Cookie, WebSocket DoS, Set-Cookie SameSite downgrade, HTTP response queue poisoning) via package override
+### 📚 Docs
+- Added `database/schema.sql` with full SQL schema, linked from README
+
+---
 
 ## [v1.1.0] - 2026
 
