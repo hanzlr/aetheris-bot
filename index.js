@@ -89,16 +89,24 @@ const commands = [
   historyData.toJSON(),
 ];
 
+// Helper: register commands ke 1 guild
+async function registerCommandsToGuild(guildId) {
+  try {
+    await rest.put(Routes.applicationGuildCommands(client.user.id, guildId), {
+      body: commands,
+    });
+    console.log(`✅ Commands registered to guild: ${guildId}`);
+  } catch (error) {
+    console.error(`❌ Failed to register commands to guild ${guildId}:`, error);
+  }
+}
+
 client.once("clientReady", async () => {
   console.log(`✅ Bot ${client.user.tag} siap!`);
-  try {
-    await rest.put(
-      Routes.applicationGuildCommands(client.user.id, process.env.GUILD_ID),
-      { body: commands },
-    );
-    console.log("✅ Slash commands berhasil didaftarkan!");
-  } catch (error) {
-    console.error(error);
+
+  // Register commands ke semua guild yang bot udah ada sekarang
+  for (const guild of client.guilds.cache.values()) {
+    await registerCommandsToGuild(guild.id);
   }
 
   setInterval(async () => {
@@ -111,6 +119,12 @@ client.once("clientReady", async () => {
       await checkExpiringPremium(client);
     }
   }, 60 * 1000);
+});
+
+// Auto-register commands saat bot di-invite ke server baru
+client.on("guildCreate", async (guild) => {
+  console.log(`🆕 Bot joined new guild: ${guild.name} (${guild.id})`);
+  await registerCommandsToGuild(guild.id);
 });
 
 client.on("messageCreate", async (message) => {
